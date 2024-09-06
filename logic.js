@@ -35,18 +35,29 @@ function init_shapes_and_place(playing_board) {
 function draw() {
   const canvas = document.getElementById("playing_board");
   //size of one tile on the board is 50 pixels.
-  canvas.width = 50 * playing_board_columns; // 350px.
-  canvas.height = 50 * playing_board_rows; // 500px.
+  canvas.width = square_size * playing_board_columns; // 350px.
+  canvas.height = square_size * playing_board_rows; // 500px.
   if (canvas.getContext) {
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "rgb(200 0 0)";
 
     ctx.fillStyle = "rgb(0 0 200 / 50%)";
-    //Blue square
-    for (let i = 0; i < playing_board_columns; i++) {
-      ctx.fillRect(50 * i, 50, square_size, square_size);
+
+    //When the x is within the playing field draw the shape on the canvas.
+    if (x <= playing_board_columns && x >= 0) {
+      ctx.fillRect(50 * x, 50 * y, square_size, square_size);
+      /* playing_board[y][x] = 0;
+      playing_board[y][x] = left_L; */
+    } else if (x <= 0) {
+      x = 0;
+      ctx.fillRect(50 * x, 50 * y, square_size, square_size);
+    }
+    if (x >= 7) {
+      x = 6;
+      ctx.fillRect(50 * x, 50 * y, square_size, square_size);
     }
   }
+  console.log("x", x);
+  console.log("y", y);
 }
 
 function play() {
@@ -56,10 +67,7 @@ function update_frame() {
   if (!init_flag) {
     init_Board();
   }
-  if (!(x <= playing_board_columns || x >= 0)) {
-    playing_board[y][x] = 0;
-    playing_board[y][x] = left_L;
-  }
+
   draw();
 }
 
