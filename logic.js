@@ -28,7 +28,7 @@ function init_Board() {
 }
 
 function init_shapes_and_place(playing_board) {
-  playing_board[y][x] = left_L;
+  playing_board[y][x] = 1;
   console.log(playing_board);
 }
 
@@ -45,19 +45,21 @@ function draw() {
     //When the x is within the playing field draw the shape on the canvas.
     if (x <= playing_board_columns && x >= 0) {
       ctx.fillRect(50 * x, 50 * y, square_size, square_size);
-      /* playing_board[y][x] = 0;
-      playing_board[y][x] = left_L; */
-    } else if (x <= 0) {
+    }
+    if (x == 0) {
       x = 0;
-      ctx.fillRect(50 * x, 50 * y, square_size, square_size);
     }
-    if (x >= 7) {
-      x = 6;
-      ctx.fillRect(50 * x, 50 * y, square_size, square_size);
+    if (x == playing_board_columns) {
+      x = playing_board_columns - 1;
+
+      if (y == playing_board_rows) {
+        y = playing_board_rows - 1;
+        ctx.fillRect(50 * x, 50 * y, square_size, square_size);
+      }
     }
+    console.log("x", x);
+    console.log("y", y);
   }
-  console.log("x", x);
-  console.log("y", y);
 }
 
 function play() {
@@ -85,24 +87,49 @@ window.addEventListener(
     switch (event.key) {
       case "s":
       case "ArrowDown":
-        y += 2;
-        playing_board[y - 2][x] = 0;
-        break;
-
-      case "w":
-      case "ArrowUp":
-        // code for "up arrow" key press.
+        if (y < playing_board_rows && y >= 0) {
+          y += 1;
+          //Places a one in the board array to keep track of the game state.
+          playing_board[y][x] = 1;
+          console.log(playing_board);
+          playing_board[y - 1][x] = 0;
+        }
+        if (y == 0) {
+          y = 0;
+        }
+        if (y == playing_board_rows) {
+          y = playing_board_rows - 1;
+        }
         break;
       case "a":
       case "ArrowLeft":
-        x -= 1;
-        playing_board[y][x + 1] = 0;
+        if (x < playing_board_columns && x > 0) {
+          x -= 1;
+
+          //Places a one in the board array to keep track of the game state.
+          playing_board[y][x] = 1;
+          console.log(playing_board);
+          playing_board[y][x + 1] = 0;
+        }
+        if (x == 0) {
+          x = 0;
+        }
 
         break;
       case "d":
       case "ArrowRight":
-        x += 1;
-        playing_board[y][x - 1] = 0;
+        //Less than or equal to zero on x so that the square dosen't get stuck on left side.
+        if (x < playing_board_columns - 1 && x >= 0) {
+          x += 1;
+          //Places a one in the board array to keep track of the game state.
+          playing_board[y][x] = 1;
+          console.log(playing_board);
+          //Places a zero in the spot where the shape was in before moving.
+          playing_board[y][x - 1] = 0;
+        }
+        if (x == playing_board_columns) {
+          x = playing_board_columns - 1;
+        }
         break;
       default:
         return; // Quit when this doesn't handle the key event.
