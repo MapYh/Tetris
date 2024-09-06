@@ -2,3 +2,7 @@
   background-color: red;
 } */
 /*test*/
+
+#playing_board {
+  border: 1px solid black;
+}
