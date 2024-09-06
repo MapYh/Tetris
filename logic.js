@@ -1,6 +1,6 @@
 let playing_board = [];
-let playing_board_rows = 10;
-let playing_board_columns = 7;
+let playing_board_rows = 15;
+let playing_board_columns = 10;
 let x = 2;
 let y = 0;
 let init_flag = false;
@@ -89,7 +89,11 @@ window.addEventListener(
       case "ArrowDown":
         if (y < playing_board_rows && y >= 0) {
           y += 1;
+          if (y == playing_board_rows) {
+            y = playing_board_rows - 1;
+          }
           //Places a one in the board array to keep track of the game state.
+          console.log(y);
           playing_board[y][x] = 1;
           console.log(playing_board);
           playing_board[y - 1][x] = 0;
@@ -97,9 +101,7 @@ window.addEventListener(
         if (y == 0) {
           y = 0;
         }
-        if (y == playing_board_rows) {
-          y = playing_board_rows - 1;
-        }
+
         break;
       case "a":
       case "ArrowLeft":
