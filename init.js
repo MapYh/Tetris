@@ -2,7 +2,7 @@ let playing_board = [];
 let init_flag = false;
 let playing_board_rows = 15;
 let playing_board_columns = 10;
-let x = Math.round((playing_board_columns - 1) / 2); //Create a function that choses the best starting coordinates.
+let x = Math.floor((playing_board_columns - 1) / 2); //Create a function that choses the best starting coordinates.
 let y = 0;
 
 export default function init_Board() {
