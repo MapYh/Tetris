@@ -1,37 +1,23 @@
-let playing_board = [];
-let playing_board_rows = 15;
-let playing_board_columns = 10;
-let x = 2;
-let y = 0;
-let init_flag = false;
-const square_size = 50;
-/********************Shapes    */
+import init_board from "./init.js";
 
+/********************Shapes    */
+const square_size = 50;
 let left_L = [
   [1, 0, 0],
   [1, 1, 1],
 ];
 
+/*************Init playing board */
+let [
+  playing_board,
+  init_flag,
+  playing_board_rows,
+  playing_board_columns,
+  x,
+  y,
+] = init_board();
+
 /********************functions */
-function init_Board() {
-  playing_board = new Array(playing_board_rows);
-
-  for (let i = 0; i < playing_board.length; i++) {
-    // Creating an array of size "playing_board_columns" and filled of 0
-    playing_board[i] = new Array(playing_board_columns).fill(0);
-  }
-  /* console.log("Last", playing_board); */
-
-  //Init shapes on board.
-  init_shapes_and_place(playing_board);
-  init_flag = true;
-}
-
-function init_shapes_and_place(playing_board) {
-  playing_board[y][x] = 1;
-  console.log(playing_board);
-}
-
 function draw() {
   const canvas = document.getElementById("playing_board");
   //size of one tile on the board is 50 pixels.
@@ -61,13 +47,22 @@ function draw() {
     console.log("y", y);
   }
 }
+//In x-cords.
+function tracking_game_state(x_cord, y_cord) {
+  //Places a one in the board array to keep track of the game state.
+  playing_board[y][x] = 1;
+  console.log(playing_board);
+  //Places a zero in the spot where the shape was in before moving.
+  playing_board[y][x - 1] = 0;
+}
 
 function play() {
   update_frame();
 }
+
 function update_frame() {
   if (!init_flag) {
-    init_Board();
+    init_board();
   }
 
   draw();
@@ -93,10 +88,11 @@ window.addEventListener(
             y = playing_board_rows - 1;
           }
           //Places a one in the board array to keep track of the game state.
-          console.log(y);
           playing_board[y][x] = 1;
           console.log(playing_board);
+          //Places a zero in the spot where the shape was in before moving.
           playing_board[y - 1][x] = 0;
+          //Places a one in the board array to keep track of the game state.
         }
         if (y == 0) {
           y = 0;
@@ -107,11 +103,7 @@ window.addEventListener(
       case "ArrowLeft":
         if (x < playing_board_columns && x > 0) {
           x -= 1;
-
-          //Places a one in the board array to keep track of the game state.
-          playing_board[y][x] = 1;
-          console.log(playing_board);
-          playing_board[y][x + 1] = 0;
+          tracking_game_state(x, y);
         }
         if (x == 0) {
           x = 0;
@@ -123,11 +115,7 @@ window.addEventListener(
         //Less than or equal to zero on x so that the square dosen't get stuck on left side.
         if (x < playing_board_columns - 1 && x >= 0) {
           x += 1;
-          //Places a one in the board array to keep track of the game state.
-          playing_board[y][x] = 1;
-          console.log(playing_board);
-          //Places a zero in the spot where the shape was in before moving.
-          playing_board[y][x - 1] = 0;
+          tracking_game_state(x, y);
         }
         if (x == playing_board_columns) {
           x = playing_board_columns - 1;
