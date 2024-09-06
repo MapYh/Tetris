@@ -17,6 +17,13 @@ let [
   y,
 ] = init_board();
 
+function update_frame() {
+  if (!init_flag) {
+    init_board();
+  }
+
+  draw();
+}
 /********************functions */
 function draw() {
   const canvas = document.getElementById("playing_board");
@@ -58,14 +65,6 @@ function tracking_game_state(x_cord, y_cord) {
 
 function play() {
   update_frame();
-}
-
-function update_frame() {
-  if (!init_flag) {
-    init_board();
-  }
-
-  draw();
 }
 
 /********************Eventlisteners */
