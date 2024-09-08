@@ -28,6 +28,7 @@ export default function init_Board() {
 }
 
 function init_shapes_and_place(playing_board) {
+  //PLaces in the starting location.
   playing_board[y][x] = 1;
   console.log(playing_board);
 }

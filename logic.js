@@ -25,6 +25,24 @@ function update_frame() {
   draw();
 }
 /********************functions */
+
+function draw_Shape(canvas, ctx) {
+  /*  const canvas = document.getElementById("playing_board");
+  const ctx = canvas.getContext("2d"); */
+  for (let i = 0; i < left_L.length; i++) {
+    for (let j = 0; j < left_L[i].length; j++) {
+      if (left_L[i][j] != 0) {
+        ctx.fillRect(
+          50 * j + x * 50,
+          50 * i + y * 50,
+          square_size,
+          square_size
+        );
+      }
+    }
+  }
+}
+
 function draw() {
   const canvas = document.getElementById("playing_board");
   //size of one tile on the board is 50 pixels.
@@ -32,12 +50,11 @@ function draw() {
   canvas.height = square_size * playing_board_rows; // 500px.
   if (canvas.getContext) {
     const ctx = canvas.getContext("2d");
-
     ctx.fillStyle = "rgb(0 0 200 / 50%)";
-
     //When the x is within the playing field draw the shape on the canvas.
     if (x <= playing_board_columns && x >= 0) {
-      ctx.fillRect(50 * x, 50 * y, square_size, square_size);
+      /* ctx.fillRect(50 * x, 50 * y, square_size, square_size); */
+      draw_Shape(canvas, ctx, x, y);
     }
     if (x == 0) {
       x = 0;
@@ -81,7 +98,7 @@ window.addEventListener(
     switch (event.key) {
       case "s":
       case "ArrowDown":
-        if (y < playing_board_rows && y >= 0) {
+        if (y < playing_board_rows - 2 && y >= 0) {
           y += 1;
           if (y == playing_board_rows) {
             y = playing_board_rows - 1;
@@ -112,7 +129,7 @@ window.addEventListener(
       case "d":
       case "ArrowRight":
         //Less than or equal to zero on x so that the square dosen't get stuck on left side.
-        if (x < playing_board_columns - 1 && x >= 0) {
+        if (x < playing_board_columns - 3 && x >= 0) {
           x += 1;
           tracking_game_state(x, y);
         }
