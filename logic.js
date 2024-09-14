@@ -2,7 +2,7 @@ import init_board from "./init.js";
 
 /********************Shapes    */
 const square_size = 50;
-let landed = [];
+
 let shapes = {
   vertical_line: [[1], [1], [1]],
   horizontal_line: [[1, 1, 1]],
@@ -60,6 +60,7 @@ let [
   playing_board_columns,
   x,
   y,
+  landed,
 ] = init_board();
 
 function update_frame() {
@@ -142,9 +143,9 @@ window.addEventListener(
             y = playing_board_rows - shapes[shape_key].length;
           }
           //Places a one in the board array to keep track of the game state.
-          /* for (let i = 0; i < shapes[shape_key].length; i++) {
+          for (let i = 0; i < shapes[shape_key].length; i++) {
             for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              playing_board[i][j] = 1;
+              landed[i][j] = 1;
               ctx.fillRect(
                 50 * j + x * 50,
                 50 * i + y * 50,
@@ -152,7 +153,7 @@ window.addEventListener(
                 square_size
               );
             }
-          } */
+          }
 
           console.log(playing_board);
           //Places a zero in the spot where the shape was in before moving.

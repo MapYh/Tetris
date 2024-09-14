@@ -1,4 +1,5 @@
 let playing_board = [];
+let landed = [];
 let init_flag = false;
 let playing_board_rows = 15;
 let playing_board_columns = 10;
@@ -7,10 +8,11 @@ let y = 0;
 
 export default function init_Board() {
   playing_board = new Array(playing_board_rows);
-
+  landed = new Array(playing_board_rows);
   for (let i = 0; i < playing_board.length; i++) {
     // Creating an array of size "playing_board_columns" and filled of 0
     playing_board[i] = new Array(playing_board_columns).fill(0);
+    landed[i] = new Array(playing_board_columns).fill(0);
   }
   /* console.log("Last", playing_board); */
 
