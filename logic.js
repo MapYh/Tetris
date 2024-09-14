@@ -2,81 +2,56 @@ import init_board from "./init.js";
 
 /********************Shapes    */
 const square_size = 50;
-let left_L = [
-  [1, 0, 0],
-  [1, 1, 1],
-];
-
-let right_L = [
-  [0, 0, 1],
-  [1, 1, 1],
-];
-
-let square = [
-  [1, 1],
-  [1, 1],
-];
-
+let landed = [];
 let shapes = {
-  vertical_line: [
-    [1, 0, 0],
-    [1, 0, 0],
-    [1, 0, 0],
-  ],
-  horizontal_line: [
-    [1, 1, 1],
-    [0, 0, 0],
-    [0, 0, 0],
-  ],
+  vertical_line: [[1], [1], [1]],
+  horizontal_line: [[1, 1, 1]],
   square: [
-    [1, 1, 0],
-    [1, 1, 0],
-    [0, 0, 0],
+    [1, 1],
+    [1, 1],
   ],
   right_L: [
     [0, 0, 1],
     [1, 1, 1],
-    [0, 0, 0],
   ],
   left_L: [
     [1, 0, 0],
     [1, 1, 1],
-    [0, 0, 0],
   ],
   right_L_standing: [
-    [1, 1, 0],
-    [1, 0, 0],
-    [1, 0, 0],
+    [1, 1],
+    [1, 0],
+    [1, 0],
   ],
   left_L_standing: [
-    [0, 1, 0],
-    [0, 1, 0],
-    [1, 1, 0],
+    [0, 1],
+    [0, 1],
+    [1, 1],
   ],
   zig_zag_right: [
     [0, 1, 1],
     [1, 1, 0],
-    [0, 0, 0],
   ],
   zig_zag_left: [
     [1, 1, 0],
     [0, 1, 1],
-    [0, 0, 0],
   ],
   zig_zag_standing_right: [
-    [0, 1, 0],
-    [1, 1, 0],
-    [1, 0, 0],
+    [0, 1],
+    [1, 1],
+    [1, 0],
   ],
   zig_zag_standing_left: [
-    [1, 0, 0],
-    [1, 1, 0],
-    [0, 1, 0],
+    [1, 0],
+    [1, 1],
+    [0, 1],
   ],
 };
 
 var keys = Object.keys(shapes);
 let randnum = Math.floor(Math.random() * keys.length);
+let shape_key = keys[randnum];
+
 /*************Init playing board */
 let [
   playing_board,
@@ -96,12 +71,11 @@ function update_frame() {
 /********************functions */
 
 function draw_Shape(canvas, ctx) {
-  /* console.log(shapes[randnum].length); */
-  let shape_key = keys[randnum];
-  console.log(shape_key);
-  console.log("test", shapes[shape_key]);
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      /* if (landed[i][j] != 0) {
+        //draw landed block.
+      } */
       if (shapes[shape_key][i][j] != 0) {
         ctx.fillRect(
           50 * j + x * 50,
@@ -127,24 +101,17 @@ function draw() {
       /* ctx.fillRect(50 * x, 50 * y, square_size, square_size); */
       draw_Shape(canvas, ctx, x, y, randnum);
     }
-    /* if (x == 0) {
-      x = 0;
-    } */
-    /* if (x == playing_board_columns) {
-      x = playing_board_columns - 1;
 
-      if (y == playing_board_rows) {
-        y = playing_board_rows - 1;
-      }
-    } */
     console.log("x", x);
     console.log("y", y);
   }
 }
+
 //In x-cords.
 function tracking_game_state() {
   //Places a one in the board array to keep track of the game state.
   playing_board[y][x] = 1;
+
   console.log(playing_board);
   //Places a zero in the spot where the shape was in before moving.
   playing_board[y][x - 1] = 0;
@@ -168,13 +135,25 @@ window.addEventListener(
     switch (event.key) {
       case "s":
       case "ArrowDown":
-        if (y < playing_board_rows - 2 && y >= 0) {
+        if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
+          console.log("test", shapes[shape_key].length);
           y += 1;
           if (y == playing_board_rows) {
-            y = playing_board_rows - 1;
+            y = playing_board_rows - shapes[shape_key].length;
           }
           //Places a one in the board array to keep track of the game state.
-          playing_board[y][x] = 1;
+          /* for (let i = 0; i < shapes[shape_key].length; i++) {
+            for (let j = 0; j < shapes[shape_key][i].length; j++) {
+              playing_board[i][j] = 1;
+              ctx.fillRect(
+                50 * j + x * 50,
+                50 * i + y * 50,
+                square_size,
+                square_size
+              );
+            }
+          } */
+
           console.log(playing_board);
           //Places a zero in the spot where the shape was in before moving.
           playing_board[y - 1][x] = 0;
@@ -199,7 +178,7 @@ window.addEventListener(
       case "d":
       case "ArrowRight":
         //Less than or equal to zero on x so that the square dosen't get stuck on left side.
-        if (x < playing_board_columns - 3 && x >= 0) {
+        if (x < playing_board_columns - shapes[shape_key][1].length && x >= 0) {
           x += 1;
           tracking_game_state(x, y);
         }
