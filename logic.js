@@ -7,6 +7,76 @@ let left_L = [
   [1, 1, 1],
 ];
 
+let right_L = [
+  [0, 0, 1],
+  [1, 1, 1],
+];
+
+let square = [
+  [1, 1],
+  [1, 1],
+];
+
+let shapes = {
+  vertical_line: [
+    [1, 0, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+  ],
+  horizontal_line: [
+    [1, 1, 1],
+    [0, 0, 0],
+    [0, 0, 0],
+  ],
+  square: [
+    [1, 1, 0],
+    [1, 1, 0],
+    [0, 0, 0],
+  ],
+  right_L: [
+    [0, 0, 1],
+    [1, 1, 1],
+    [0, 0, 0],
+  ],
+  left_L: [
+    [1, 0, 0],
+    [1, 1, 1],
+    [0, 0, 0],
+  ],
+  right_L_standing: [
+    [1, 1, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+  ],
+  left_L_standing: [
+    [0, 1, 0],
+    [0, 1, 0],
+    [1, 1, 0],
+  ],
+  zig_zag_right: [
+    [0, 1, 1],
+    [1, 1, 0],
+    [0, 0, 0],
+  ],
+  zig_zag_left: [
+    [1, 1, 0],
+    [0, 1, 1],
+    [0, 0, 0],
+  ],
+  zig_zag_standing_right: [
+    [0, 1, 0],
+    [1, 1, 0],
+    [1, 0, 0],
+  ],
+  zig_zag_standing_left: [
+    [1, 0, 0],
+    [1, 1, 0],
+    [0, 1, 0],
+  ],
+};
+
+var keys = Object.keys(shapes);
+let randnum = Math.floor(Math.random() * keys.length);
 /*************Init playing board */
 let [
   playing_board,
@@ -26,9 +96,13 @@ function update_frame() {
 /********************functions */
 
 function draw_Shape(canvas, ctx) {
-  for (let i = 0; i < left_L.length; i++) {
-    for (let j = 0; j < left_L[i].length; j++) {
-      if (left_L[i][j] != 0) {
+  /* console.log(shapes[randnum].length); */
+  let shape_key = keys[randnum];
+  console.log(shape_key);
+  console.log("test", shapes[shape_key]);
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      if (shapes[shape_key][i][j] != 0) {
         ctx.fillRect(
           50 * j + x * 50,
           50 * i + y * 50,
@@ -51,7 +125,7 @@ function draw() {
     //When the x is within the playing field draw the shape on the canvas.
     if (x <= playing_board_columns && x >= 0) {
       /* ctx.fillRect(50 * x, 50 * y, square_size, square_size); */
-      draw_Shape(canvas, ctx, x, y);
+      draw_Shape(canvas, ctx, x, y, randnum);
     }
     /* if (x == 0) {
       x = 0;
