@@ -7,8 +7,18 @@
     <title>Tetris</title>
   </head>
   <body>
-    <canvas id="playing_board">Tetris</canvas>
+    <section class="main">
+      <canvas id="playing_board">Tetris</canvas>
+      <section class="playing_board__side_field">
+        <section class="playing_board__side_field__score_lives">
+          <div class="score_lives__score">Score:50</div>
+          <div class="score_lives__lives">Lives:50</div>
+        </section>
+        <section class="start_button"><button>Start</button></section>
+      </section>
+    </section>
   </body>
+
   <script type="module" src="logic.js"></script>
   <script type="module" src="init.js"></script>
 </html>

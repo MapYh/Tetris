@@ -6,3 +6,22 @@
 #playing_board {
   border: 1px solid black;
 }
+
+.main {
+  display: flex;
+}
+
+.playing_board__side_field__score_lives {
+  display: flex;
+}
+
+.score_lives__score {
+  width: 10rem;
+}
+
+.start_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

@@ -21,14 +21,11 @@ function update_frame() {
   if (!init_flag) {
     init_board();
   }
-
   draw();
 }
 /********************functions */
 
 function draw_Shape(canvas, ctx) {
-  /*  const canvas = document.getElementById("playing_board");
-  const ctx = canvas.getContext("2d"); */
   for (let i = 0; i < left_L.length; i++) {
     for (let j = 0; j < left_L[i].length; j++) {
       if (left_L[i][j] != 0) {
@@ -56,23 +53,22 @@ function draw() {
       /* ctx.fillRect(50 * x, 50 * y, square_size, square_size); */
       draw_Shape(canvas, ctx, x, y);
     }
-    if (x == 0) {
+    /* if (x == 0) {
       x = 0;
-    }
-    if (x == playing_board_columns) {
+    } */
+    /* if (x == playing_board_columns) {
       x = playing_board_columns - 1;
 
       if (y == playing_board_rows) {
         y = playing_board_rows - 1;
-        ctx.fillRect(50 * x, 50 * y, square_size, square_size);
       }
-    }
+    } */
     console.log("x", x);
     console.log("y", y);
   }
 }
 //In x-cords.
-function tracking_game_state(x_cord, y_cord) {
+function tracking_game_state() {
   //Places a one in the board array to keep track of the game state.
   playing_board[y][x] = 1;
   console.log(playing_board);
