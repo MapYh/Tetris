@@ -14,40 +14,20 @@ let [
 ] = init_Board();
 
 function update_frame() {
+  undraw(x, y);
   if (!init_flag) {
     init_Board();
   }
   draw();
+  tracking_game_state(x, y);
 }
 
 /********************functions */
-function undraw_y() {
-  //Places ones in the board array in the current shape to keep track of the game state.
-  for (let i = 0; i < shapes[shape_key].length; i++) {
-    for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      if (shapes[shape_key][i][j] != 0) {
-        if (y == 0) {
-          playing_board[y][x + j] = 0;
-        } else {
-          playing_board[y - 1][x + j] = 0;
-        }
-      }
-    }
-  }
-}
-function undraw_x_right() {
-  //Places ones in the board array in the current shape to keep track of the game state.
-  for (let i = 0; i < shapes[shape_key].length; i++) {
-    for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      playing_board[y + i][x - 1] = 0;
-    }
-  }
-}
-function undraw_x_left() {
-  //Places ones in the board array in the current shape to keep track of the game state.
-  for (let i = 0; i < shapes[shape_key].length; i++) {
-    for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      playing_board[y + i][x + 3] = 0;
+
+function undraw(x, y) {
+  for (let i = 0; i < playing_board.length; i++) {
+    for (let j = 0; j < playing_board[i].length; j++) {
+      playing_board[i][j] = 0;
     }
   }
 }
@@ -77,23 +57,20 @@ function draw() {
     ctx.fillStyle = "rgb(0 0 200 / 50%)";
     //When the x is within the playing field draw the shape on the canvas.
     if (x <= playing_board_columns && x >= 0) {
-      draw_Shape(canvas, ctx, x, y, randnum);
+      draw_Shape(canvas, ctx, x, y);
     }
   }
-  console.log("x", x);
-  console.log("y", y);
 }
 
 function play() {
   update_frame();
 }
-//Y-coord
+
 function tracking_game_state(x, y) {
   //Places ones in the board array in the current shape to keep track of the game state.
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
-        console.log("tracking");
         playing_board[y + i][x + j] = 1;
       }
     }
@@ -116,10 +93,8 @@ window.addEventListener(
           y += 1;
           if (y == playing_board_rows) {
             y = playing_board_rows - shapes[shape_key].length;
-          } else {
-            tracking_game_state(x, y);
           }
-          undraw_y();
+
           console.log(playing_board);
         }
 
@@ -132,8 +107,7 @@ window.addEventListener(
         if (x == 0) {
           x = 0;
         }
-        tracking_game_state(x, y);
-        undraw_x_left();
+
         console.log(playing_board);
         break;
       case "d":
@@ -145,8 +119,7 @@ window.addEventListener(
         if (x == playing_board_columns) {
           x = playing_board_columns - 1;
         }
-        tracking_game_state(x, y);
-        undraw_x_right();
+
         console.log(playing_board);
         break;
       default:
@@ -162,5 +135,8 @@ window.addEventListener(
 // then dispatches event to window
 
 /*******************Loop */
-play();
+setInterval(() => {
+  play();
+}, 1000);
+
 /*********************** */

@@ -21,12 +21,12 @@ let shapes = {
     [1, 0, 0],
     [1, 1, 1],
   ],
-  right_L_standing: [
+  left_L_standing: [
     [1, 1],
     [1, 0],
     [1, 0],
   ],
-  left_L_standing: [
+  right_L_standing: [
     [0, 1],
     [0, 1],
     [1, 1],
@@ -45,9 +45,9 @@ let shapes = {
     [1, 0],
   ],
   zig_zag_standing_left: [
-    [1, 0, 0],
-    [1, 1, 0],
-    [0, 1, 0],
+    [1, 0],
+    [1, 1],
+    [0, 1],
   ],
 };
 
@@ -63,7 +63,6 @@ export default function init_Board() {
     playing_board[i] = new Array(playing_board_columns).fill(0);
     landed[i] = new Array(playing_board_columns).fill(0);
   }
-  /* console.log("Last", playing_board); */
 
   //Init shapes on board.
   init_shapes_and_place(playing_board);
