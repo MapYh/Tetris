@@ -21,6 +21,36 @@ function update_frame() {
 }
 
 /********************functions */
+function undraw_y() {
+  //Places ones in the board array in the current shape to keep track of the game state.
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      if (shapes[shape_key][i][j] != 0) {
+        if (y == 0) {
+          playing_board[y][x + j] = 0;
+        } else {
+          playing_board[y - 1][x + j] = 0;
+        }
+      }
+    }
+  }
+}
+function undraw_x_right() {
+  //Places ones in the board array in the current shape to keep track of the game state.
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      playing_board[y + i][x - 1] = 0;
+    }
+  }
+}
+function undraw_x_left() {
+  //Places ones in the board array in the current shape to keep track of the game state.
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      playing_board[y + i][x + 3] = 0;
+    }
+  }
+}
 
 function draw_Shape(canvas, ctx) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
@@ -63,9 +93,8 @@ function tracking_game_state(x, y) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
+        console.log("tracking");
         playing_board[y + i][x + j] = 1;
-
-        playing_board[y - 1][x + j] = 0;
       }
     }
   }
@@ -90,12 +119,9 @@ window.addEventListener(
           } else {
             tracking_game_state(x, y);
           }
-
+          undraw_y();
           console.log(playing_board);
         }
-        /* if (y == 0) {
-          y = 0;
-        } */
 
         break;
       case "a":
@@ -106,7 +132,9 @@ window.addEventListener(
         if (x == 0) {
           x = 0;
         }
-
+        tracking_game_state(x, y);
+        undraw_x_left();
+        console.log(playing_board);
         break;
       case "d":
       case "ArrowRight":
@@ -117,6 +145,9 @@ window.addEventListener(
         if (x == playing_board_columns) {
           x = playing_board_columns - 1;
         }
+        tracking_game_state(x, y);
+        undraw_x_right();
+        console.log(playing_board);
         break;
       default:
         return; // Quit when this doesn't handle the key event.
