@@ -1,4 +1,11 @@
-import { init_Board, shape_key, randnum, keys, shapes } from "./init.js";
+import {
+  init_Board,
+  shape_key,
+  shapes,
+  landed,
+  start_x,
+  start_y,
+} from "./init.js";
 
 /********************Shapes    */
 const square_size = 50;
@@ -13,6 +20,9 @@ let [
   y,
 ] = init_Board();
 
+let t = y;
+let z = x;
+
 function update_frame() {
   undraw(x, y);
   if (!init_flag) {
@@ -20,6 +30,10 @@ function update_frame() {
   }
   draw();
   tracking_game_state(x, y);
+  if (y >= 15 - shapes[shape_key].length) {
+    x = start_x;
+    y = start_y;
+  }
 }
 
 /********************functions */
@@ -35,6 +49,15 @@ function undraw(x, y) {
 function draw_Shape(canvas, ctx) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      if (landed[i][j] != 0) {
+        console.log(landed[i].length, landed[i][j].length);
+        ctx.fillRect(
+          50 * j + y * 50,
+          50 * i + x * 50,
+          square_size,
+          square_size
+        );
+      }
       if (shapes[shape_key][i][j] != 0) {
         ctx.fillRect(
           50 * j + x * 50,
@@ -79,6 +102,8 @@ function tracking_game_state(x, y) {
 
 /********************Eventlisteners */
 
+//Exists to load the playing board instantly.
+window.addEventListener("load", play());
 //Change html node to canvas.
 window.addEventListener(
   "keydown",
@@ -95,6 +120,18 @@ window.addEventListener(
             y = playing_board_rows - shapes[shape_key].length;
           }
 
+          for (let i = 0; i < shapes[shape_key].length; i++) {
+            for (let j = 0; j < shapes[shape_key][i].length; j++) {
+              console.log(shapes[shape_key].length);
+              if (y >= 15 - shapes[shape_key].length) {
+                landed[y + i][x + j] = 1;
+
+                console.log("Landed two", x, y);
+                console.log("Landed", landed);
+                console.log("playing_board", playing_board);
+              }
+            }
+          }
           console.log(playing_board);
         }
 
@@ -113,7 +150,7 @@ window.addEventListener(
       case "d":
       case "ArrowRight":
         //Less than or equal to zero on x so that the square dosen't get stuck on left side.
-        if (x < playing_board_columns - shapes[shape_key][1].length && x >= 0) {
+        if (x < playing_board_columns - shapes[shape_key][0].length && x >= 0) {
           x += 1;
         }
         if (x == playing_board_columns) {

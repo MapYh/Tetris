@@ -3,6 +3,8 @@ let landed = [];
 let init_flag = false;
 let playing_board_rows = 15;
 let playing_board_columns = 10;
+let start_x = 4;
+let start_y = 0;
 let x = Math.floor((playing_board_columns - 1) / 2); //Create a function that choses the best starting coordinates.
 let y = 0;
 
@@ -90,4 +92,13 @@ function init_shapes_and_place(playing_board) {
   console.log(playing_board);
 }
 
-export { shape_key, randnum, keys, shapes, init_Board };
+export {
+  shape_key,
+  randnum,
+  keys,
+  shapes,
+  init_Board,
+  landed,
+  start_y,
+  start_x,
+};
