@@ -9,7 +9,11 @@ import {
 
 /********************Shapes    */
 const square_size = 50;
+let gameOver = false;
+let fps = 60;
 
+const canvas = document.getElementById("playing_board");
+const ctx = canvas.getContext("2d");
 /*************Init playing board */
 let [
   playing_board,
@@ -20,23 +24,8 @@ let [
   y,
 ] = init_Board();
 
-let t = y;
-let z = x;
-
-function update_frame() {
-  undraw(x, y);
-  if (!init_flag) {
-    init_Board();
-  }
-  draw();
-  tracking_game_state(x, y);
-  if (y >= 15 - shapes[shape_key].length) {
-    x = start_x;
-    y = start_y;
-  }
-}
-
 /********************functions */
+/*******************Loop */
 
 function undraw(x, y) {
   for (let i = 0; i < playing_board.length; i++) {
@@ -46,18 +35,20 @@ function undraw(x, y) {
   }
 }
 
-function draw_Shape(canvas, ctx) {
+function draw_landed_shapes() {
+  for (let i = 0; i < landed.length; i++) {
+    for (let j = 0; j < landed[i].length; j++) {
+      if (landed[i][j] != 0) {
+        ctx.fillStyle = "green";
+        ctx.fillRect(50 * j, 50 * i, square_size, square_size);
+      }
+    }
+  }
+}
+
+function draw_Shape() {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      if (landed[i][j] != 0) {
-        console.log(landed[i].length, landed[i][j].length);
-        ctx.fillRect(
-          50 * j + y * 50,
-          50 * i + x * 50,
-          square_size,
-          square_size
-        );
-      }
       if (shapes[shape_key][i][j] != 0) {
         ctx.fillRect(
           50 * j + x * 50,
@@ -71,12 +62,10 @@ function draw_Shape(canvas, ctx) {
 }
 
 function draw() {
-  const canvas = document.getElementById("playing_board");
   //size of one tile on the board is 50 pixels.
   canvas.width = square_size * playing_board_columns; // 350px.
   canvas.height = square_size * playing_board_rows; // 500px.
   if (canvas.getContext) {
-    const ctx = canvas.getContext("2d");
     ctx.fillStyle = "rgb(0 0 200 / 50%)";
     //When the x is within the playing field draw the shape on the canvas.
     if (x <= playing_board_columns && x >= 0) {
@@ -85,10 +74,17 @@ function draw() {
   }
 }
 
-function play() {
-  update_frame();
+function tracking_placed_shapes(x, y) {
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      if (shapes[shape_key][i][j] != 0) {
+        if (y >= 15 - shapes[shape_key].length) {
+          landed[y + i][x + j] = 1;
+        }
+      }
+    }
+  }
 }
-
 function tracking_game_state(x, y) {
   //Places ones in the board array in the current shape to keep track of the game state.
   for (let i = 0; i < shapes[shape_key].length; i++) {
@@ -119,19 +115,8 @@ window.addEventListener(
           if (y == playing_board_rows) {
             y = playing_board_rows - shapes[shape_key].length;
           }
+          tracking_placed_shapes(x, y);
 
-          for (let i = 0; i < shapes[shape_key].length; i++) {
-            for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              console.log(shapes[shape_key].length);
-              if (y >= 15 - shapes[shape_key].length) {
-                landed[y + i][x + j] = 1;
-
-                console.log("Landed two", x, y);
-                console.log("Landed", landed);
-                console.log("playing_board", playing_board);
-              }
-            }
-          }
           console.log(playing_board);
         }
 
@@ -168,12 +153,32 @@ window.addEventListener(
   },
   true
 );
-// the last option dispatches the event to the listener first,
-// then dispatches event to window
-
-/*******************Loop */
-setInterval(() => {
-  play();
-}, 1000);
 
 /*********************** */
+/* 
+if (!gameOver) {
+  setInterval(() => {
+    play();
+  }, 16);
+} */
+
+//Init game loop.
+window.requestAnimationFrame(play);
+
+function play() {
+  window.requestAnimationFrame(play);
+  if (y >= 15 - shapes[shape_key].length) {
+    x = start_x;
+    y = start_y;
+  }
+  undraw(x, y);
+  if (!init_flag) {
+    init_Board();
+  }
+
+  draw();
+
+  tracking_game_state(x, y);
+  draw_landed_shapes();
+  console.log("landed", landed);
+}
