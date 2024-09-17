@@ -89,7 +89,7 @@ function init_shapes_and_place(playing_board) {
     }
   }
   init_flag = true;
-  console.log(playing_board);
+  /* console.log(playing_board); */
 }
 
 export {

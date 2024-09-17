@@ -10,7 +10,6 @@ import {
 /********************Shapes    */
 const square_size = 50;
 let gameOver = false;
-let fps = 60;
 
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
@@ -59,6 +58,7 @@ function draw_Shape() {
       }
     }
   }
+  draw_landed_shapes();
 }
 
 function draw() {
@@ -111,13 +111,21 @@ window.addEventListener(
       case "s":
       case "ArrowDown":
         if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
-          y += 1;
-          if (y == playing_board_rows) {
-            y = playing_board_rows - shapes[shape_key].length;
-          }
-          tracking_placed_shapes(x, y);
+          let j = 0;
 
-          console.log(playing_board);
+          /*  console.log(landed);
+          console.log(shapes); */
+
+          if (
+            landed[y + shapes[shape_key].length][x] != 1 &&
+            landed[y][x + shapes[shape_key][j].length] != 1
+          ) {
+            y += 1;
+            j++;
+          } else {
+          }
+
+          tracking_placed_shapes(x, y);
         }
 
         break;
@@ -130,7 +138,6 @@ window.addEventListener(
           x = 0;
         }
 
-        console.log(playing_board);
         break;
       case "d":
       case "ArrowRight":
@@ -142,7 +149,6 @@ window.addEventListener(
           x = playing_board_columns - 1;
         }
 
-        console.log(playing_board);
         break;
       default:
         return; // Quit when this doesn't handle the key event.
@@ -155,30 +161,24 @@ window.addEventListener(
 );
 
 /*********************** */
-/* 
-if (!gameOver) {
-  setInterval(() => {
-    play();
-  }, 16);
-} */
 
 //Init game loop.
 window.requestAnimationFrame(play);
 
-function play() {
-  window.requestAnimationFrame(play);
-  if (y >= 15 - shapes[shape_key].length) {
-    x = start_x;
-    y = start_y;
-  }
-  undraw(x, y);
-  if (!init_flag) {
-    init_Board();
-  }
+function play(timeStamp) {
+  if (!gameOver) {
+    window.requestAnimationFrame(play);
+    if (y >= 15 - shapes[shape_key].length) {
+      x = start_x;
+      y = start_y;
+    }
+    undraw(x, y);
+    if (!init_flag) {
+      init_Board();
+    }
 
-  draw();
-
-  tracking_game_state(x, y);
-  draw_landed_shapes();
-  console.log("landed", landed);
+    draw();
+    tracking_game_state(x, y);
+    draw_landed_shapes();
+  }
 }
