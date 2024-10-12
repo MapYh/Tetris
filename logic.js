@@ -112,19 +112,26 @@ window.addEventListener(
       case "ArrowDown":
         if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
           let j = 0;
+          console.log("j", j);
+          console.log("shapes[shape_key].length y", shapes[shape_key].length);
 
-          /*  console.log(landed);
-          console.log(shapes); */
-
+          console.log("x and y", x, y);
+          console.log("Landed y", landed);
+          console.log(
+            "landed[y + shapes[shape_key].length][x] y",
+            landed[y + shapes[shape_key].length][x]
+          );
           if (
-            landed[y + shapes[shape_key].length][x] != 1 &&
-            landed[y][x + shapes[shape_key][j].length] != 1
+            landed[y + shapes[shape_key].length][x] == 1 &&
+            shapes[shape_key][y + 1] == 0
           ) {
+            y += 1;
+          }
+          if (landed[y + shapes[shape_key].length][x] == 0) {
             y += 1;
             j++;
           } else {
           }
-
           tracking_placed_shapes(x, y);
         }
 
@@ -132,7 +139,20 @@ window.addEventListener(
       case "a":
       case "ArrowLeft":
         if (x < playing_board_columns && x > 0) {
-          x -= 1;
+          let j = 0;
+          console.log("j", j);
+          console.log("y + 1", y + 1);
+          console.log("x", x);
+
+          console.log("x and y", x, y);
+          console.log("Landed x", landed);
+
+          if (landed[y + shapes[shape_key].length][x] == 0) {
+            x -= 1;
+            j++;
+          } else {
+          }
+          tracking_placed_shapes(x, y);
         }
         if (x == 0) {
           x = 0;
@@ -143,7 +163,25 @@ window.addEventListener(
       case "ArrowRight":
         //Less than or equal to zero on x so that the square dosen't get stuck on left side.
         if (x < playing_board_columns - shapes[shape_key][0].length && x >= 0) {
-          x += 1;
+          let j = 0;
+          console.log("j", j);
+          console.log("shapes[shape_key].length x", shapes[shape_key].length);
+          console.log(
+            "shapes[shape_key][j].length x",
+            shapes[shape_key][j].length
+          );
+          console.log("x and y", x, y);
+          console.log("Landed x", landed);
+          console.log(
+            "landed[y][x + shapes[shape_key][j].length] x",
+            landed[y][x + shapes[shape_key][j].length]
+          );
+          if (landed[y][x + shapes[shape_key][j].length] == 0) {
+            x += 1;
+            j++;
+          } else {
+          }
+          tracking_placed_shapes(x, y);
         }
         if (x == playing_board_columns) {
           x = playing_board_columns - 1;
