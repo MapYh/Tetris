@@ -4,10 +4,16 @@ import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 const square_size = 50;
 let gameover = false;
 let score = 0;
+let lives = 3;
+let hit = false;
 
 let scoreElement = document.getElementById("score");
-let scoreNode = document.createTextNode(`Score: ${score}`);
+let scoreNode = document.createTextNode(`Score: ${score} `);
 scoreElement.appendChild(scoreNode);
+
+let livesElement = document.getElementById("score");
+let livesNode = document.createTextNode(`Lives: ${lives}`);
+livesElement.appendChild(livesNode);
 
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
@@ -75,36 +81,48 @@ function draw() {
   }
 }
 
-function gameOver() {
-  for (let i = 0; i < landed[0].length; i++) {
-    if (landed[0][i] == 1) {
-      gameover = true;
-      console.log("Game over", gameover);
+function checkIfgameOver() {
+  const allEqual = (arr) => arr.every((val) => val === 0);
+
+  const result = allEqual(landed[0]);
+
+  if (!result) {
+    hit = true;
+    updateLives();
+    for (let i = 0; i < landed.length; i++) {
+      for (let j = 0; j < landed[0].length; j++) {
+        landed[i][j] = 0;
+      }
     }
+    return;
   }
 }
 
 function checkBoardForPoints() {
-  /* let result = [];
-  for (let i = 0; i < landed.length; i++) {
-    result = landed[i].forEach((element) => {
-      if (element == 1) {
-        return true;
-      }
-    });
-  } */
-
   for (let i = 0; i < landed.length; i++) {
     const allEqual = (arr) => arr.every((val) => val === 1);
     const result = allEqual(landed[i]);
-    console.log("result", result);
+
     if (result) {
-      console.log("here");
       updateScore();
       for (let j = 0; j < landed.length; j++) {
         landed[i][j] = 0;
       }
     }
+  }
+}
+
+function updateLives() {
+  if (hit && lives <= 0) {
+    hit = false;
+    gameover = true;
+    console.log("Game over", gameover);
+  } else if (hit) {
+    hit = false;
+    lives -= 1;
+    livesNode.nodeValue = `Lives: ${lives}`;
+    console.log("lives", lives);
+    return 0;
   }
 }
 
@@ -117,7 +135,8 @@ function reset() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[0].length; j++) {
       landed[i][j] = 0;
-
+      lives = 3;
+      score = 0;
       gameover = false;
     }
   }
@@ -136,6 +155,7 @@ function reset() {
 
 function tracking_placed_shapes(x, y, collision) {
   checkBoardForPoints();
+  checkIfgameOver();
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
@@ -185,6 +205,7 @@ window.addEventListener(
                 tracking_placed_shapes(x, y, collision);
                 x = start_x;
                 y = start_y;
+
                 return;
               }
             }
@@ -193,8 +214,7 @@ window.addEventListener(
           if (!collision) {
             y++;
           }
-
-          tracking_placed_shapes(x, y);
+          tracking_placed_shapes(x, y, collision);
         }
 
         break;
@@ -279,8 +299,7 @@ function play(timeStamp) {
     if (!init_flag) {
       init_Board();
     }
-    gameOver();
-
+    checkIfgameOver();
     draw();
     tracking_game_state(x, y);
     draw_landed_shapes();
