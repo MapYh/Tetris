@@ -84,9 +84,32 @@ function gameOver() {
   }
 }
 
-function checkBoardForPoints() {}
+function checkBoardForPoints() {
+  /* let result = [];
+  for (let i = 0; i < landed.length; i++) {
+    result = landed[i].forEach((element) => {
+      if (element == 1) {
+        return true;
+      }
+    });
+  } */
+
+  for (let i = 0; i < landed.length; i++) {
+    const allEqual = (arr) => arr.every((val) => val === 1);
+    const result = allEqual(landed[i]);
+    console.log("result", result);
+    if (result) {
+      console.log("here");
+      updateScore();
+      for (let j = 0; j < landed.length; j++) {
+        landed[i][j] = 0;
+      }
+    }
+  }
+}
 
 function updateScore() {
+  score += 10;
   scoreNode.nodeValue = `Score: ${score}`;
 }
 
@@ -112,6 +135,7 @@ function reset() {
 }
 
 function tracking_placed_shapes(x, y, collision) {
+  checkBoardForPoints();
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
