@@ -3,6 +3,11 @@ import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 /********************Shapes    */
 const square_size = 50;
 let gameover = false;
+let score = 0;
+
+let scoreElement = document.getElementById("score");
+let scoreNode = document.createTextNode(`Score: ${score}`);
+scoreElement.appendChild(scoreNode);
 
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
@@ -79,6 +84,12 @@ function gameOver() {
   }
 }
 
+function checkBoardForPoints() {}
+
+function updateScore() {
+  scoreNode.nodeValue = `Score: ${score}`;
+}
+
 function reset() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[0].length; j++) {
@@ -98,7 +109,6 @@ function reset() {
   randnum = Math.floor(Math.random() * keys.length);
   shape_key = keys[randnum];
   init_Board();
-  console.log("outside init", randnum);
 }
 
 function tracking_placed_shapes(x, y, collision) {

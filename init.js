@@ -57,7 +57,7 @@ export default function init_Board() {
   var keys = Object.keys(shapes);
   let randnum = Math.floor(Math.random() * keys.length);
   let shape_key = keys[randnum];
-  console.log("inside init", randnum);
+
   playing_board = new Array(playing_board_rows);
   landed = new Array(playing_board_rows);
   for (let i = 0; i < playing_board.length; i++) {
@@ -92,7 +92,6 @@ function init_shapes_and_place(playing_board, shape_key) {
     }
   }
   init_flag = true;
-  /* console.log(playing_board); */
 }
 
 export { shapes, init_Board, landed, start_y, start_x };
