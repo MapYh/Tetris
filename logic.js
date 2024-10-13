@@ -1,11 +1,4 @@
-import {
-  init_Board,
-  shape_key,
-  shapes,
-  landed,
-  start_x,
-  start_y,
-} from "./init.js";
+import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 
 /********************Shapes    */
 const square_size = 50;
@@ -21,6 +14,9 @@ let [
   playing_board_columns,
   x,
   y,
+  shape_key,
+  keys,
+  randnum,
 ] = init_Board();
 
 /********************functions */
@@ -87,19 +83,29 @@ function reset() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[0].length; j++) {
       landed[i][j] = 0;
-      x = start_x;
-      y = start_y;
-      draw();
+
       gameover = false;
     }
   }
+
+  shape_key = keys[randnum];
+  for (let i = 0; i < playing_board.length; i++) {
+    for (let j = 0; j < playing_board[0].length; j++) {
+      playing_board[i][j] = 0;
+    }
+  }
+  keys = Object.keys(shapes);
+  randnum = Math.floor(Math.random() * keys.length);
+  shape_key = keys[randnum];
+  init_Board();
+  console.log("outside init", randnum);
 }
 
 function tracking_placed_shapes(x, y, collision) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
-        if (y >= 15 - shapes[shape_key].length) {
+        if (y >= playing_board_rows - shapes[shape_key].length) {
           landed[y + i][x + j] = 1;
         }
         if (collision == true) {
@@ -153,9 +159,6 @@ window.addEventListener(
           if (!collision) {
             y++;
           }
-
-          console.log("x", x);
-          console.log("y", y);
 
           tracking_placed_shapes(x, y);
         }
@@ -233,7 +236,7 @@ window.requestAnimationFrame(play);
 function play(timeStamp) {
   if (!gameover) {
     window.requestAnimationFrame(play);
-    if (y >= 15 - shapes[shape_key].length) {
+    if (y >= playing_board_rows - shapes[shape_key].length) {
       x = start_x;
       y = start_y;
     }
@@ -243,6 +246,7 @@ function play(timeStamp) {
       init_Board();
     }
     gameOver();
+
     draw();
     tracking_game_state(x, y);
     draw_landed_shapes();

@@ -1,7 +1,7 @@
 let playing_board = [];
 let landed = [];
 let init_flag = false;
-let playing_board_rows = 15;
+let playing_board_rows = 16;
 let playing_board_columns = 10;
 let start_x = 4;
 let start_y = 0;
@@ -53,11 +53,11 @@ let shapes = {
   ],
 };
 
-var keys = Object.keys(shapes);
-let randnum = Math.floor(Math.random() * keys.length);
-let shape_key = keys[randnum];
-
 export default function init_Board() {
+  var keys = Object.keys(shapes);
+  let randnum = Math.floor(Math.random() * keys.length);
+  let shape_key = keys[randnum];
+  console.log("inside init", randnum);
   playing_board = new Array(playing_board_rows);
   landed = new Array(playing_board_rows);
   for (let i = 0; i < playing_board.length; i++) {
@@ -67,7 +67,7 @@ export default function init_Board() {
   }
 
   //Init shapes on board.
-  init_shapes_and_place(playing_board);
+  init_shapes_and_place(playing_board, shape_key);
 
   return [
     playing_board,
@@ -76,10 +76,13 @@ export default function init_Board() {
     playing_board_columns,
     x,
     y,
+    shape_key,
+    keys,
+    randnum,
   ];
 }
 
-function init_shapes_and_place(playing_board) {
+function init_shapes_and_place(playing_board, shape_key) {
   //PLaces in the starting location.
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
@@ -92,13 +95,4 @@ function init_shapes_and_place(playing_board) {
   /* console.log(playing_board); */
 }
 
-export {
-  shape_key,
-  randnum,
-  keys,
-  shapes,
-  init_Board,
-  landed,
-  start_y,
-  start_x,
-};
+export { shapes, init_Board, landed, start_y, start_x };
