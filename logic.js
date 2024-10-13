@@ -156,8 +156,7 @@ function reset() {
 }
 
 function tracking_placed_shapes(x, y, collision) {
-  checkBoardForPoints();
-  checkIfgameOver();
+  console.log("Here");
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
@@ -207,7 +206,9 @@ window.addEventListener(
                 tracking_placed_shapes(x, y, collision);
                 x = start_x;
                 y = start_y;
-
+                keys = Object.keys(shapes);
+                randnum = Math.floor(Math.random() * keys.length);
+                shape_key = keys[randnum];
                 return;
               }
             }
@@ -216,7 +217,18 @@ window.addEventListener(
           if (!collision) {
             y++;
           }
-          tracking_placed_shapes(x, y, collision);
+
+          if (y + shapes[shape_key].length == playing_board_rows) {
+            collision = true;
+            tracking_placed_shapes(x, y, collision);
+            x = start_x;
+            y = start_y;
+            keys = Object.keys(shapes);
+            randnum = Math.floor(Math.random() * keys.length);
+            shape_key = keys[randnum];
+            checkBoardForPoints();
+            checkIfgameOver();
+          }
         }
 
         break;
@@ -267,7 +279,6 @@ window.addEventListener(
           if (!collision) {
             x++;
           }
-          tracking_placed_shapes(x, y);
         }
         if (x == playing_board_columns) {
           x = playing_board_columns - 1;
