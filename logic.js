@@ -9,7 +9,7 @@ import {
 
 /********************Shapes    */
 const square_size = 50;
-let gameOver = false;
+let gameover = false;
 
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
@@ -26,7 +26,7 @@ let [
 /********************functions */
 /*******************Loop */
 
-function undraw(x, y) {
+function undraw() {
   for (let i = 0; i < playing_board.length; i++) {
     for (let j = 0; j < playing_board[i].length; j++) {
       playing_board[i][j] = 0;
@@ -74,6 +74,27 @@ function draw() {
   }
 }
 
+function gameOver() {
+  for (let i = 0; i < landed[0].length; i++) {
+    if (landed[0][i] == 1) {
+      gameover = true;
+      console.log("Game over", gameover);
+    }
+  }
+}
+
+function reset() {
+  for (let i = 0; i < landed.length; i++) {
+    for (let j = 0; j < landed[0].length; j++) {
+      landed[i][j] = 0;
+      x = start_x;
+      y = start_y;
+      draw();
+      gameover = false;
+    }
+  }
+}
+
 function tracking_placed_shapes(x, y, collision) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
@@ -115,21 +136,8 @@ window.addEventListener(
       case "s":
       case "ArrowDown":
         if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
-          console.log("landed", landed);
-          console.log(
-            "y  + shapes[shape_key].length",
-            y + shapes[shape_key].length
-          );
-          console.log(
-            "landed[y + shapes[shape_key].length]",
-            landed[y + shapes[shape_key].length][x]
-          );
-
           for (let i = 0; i < shapes[shape_key].length; i++) {
-            console.log("i", i);
             for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              console.log("j", landed[y + shapes[shape_key].length][x + j]);
-
               if (landed[y + shapes[shape_key].length][x + j] != 1) {
                 collision = false;
               } else {
@@ -148,6 +156,7 @@ window.addEventListener(
 
           console.log("x", x);
           console.log("y", y);
+
           tracking_placed_shapes(x, y);
         }
 
@@ -155,18 +164,8 @@ window.addEventListener(
       case "a":
       case "ArrowLeft":
         if (x < playing_board_columns && x > 0) {
-          console.log("landed x", landed);
-
           for (let i = 0; i < shapes[shape_key].length; i++) {
-            console.log("i", i);
             for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              console.log("j", j);
-              console.log(
-                "shapes[shape_key][i].length",
-                shapes[shape_key][i].length
-              );
-              console.log("j", j);
-
               if (
                 landed[y + 2][x - 1] != 1 &&
                 landed[y][x - 1] != 1 &&
@@ -192,18 +191,8 @@ window.addEventListener(
       case "ArrowRight":
         //Less than or equal to zero on x so that the square dosen't get stuck on left side.
         if (x < playing_board_columns - shapes[shape_key][0].length && x >= 0) {
-          console.log("landed x", landed);
-
           for (let i = 0; i < shapes[shape_key].length; i++) {
-            console.log("i", i);
             for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              console.log("j", j);
-              console.log(
-                "shapes[shape_key][i].length",
-                shapes[shape_key][i].length
-              );
-              console.log("j", j);
-
               if (
                 landed[y + 2][x + shapes[shape_key][i].length] != 1 &&
                 landed[y][x + shapes[shape_key][i].length] != 1 &&
@@ -242,19 +231,23 @@ window.addEventListener(
 window.requestAnimationFrame(play);
 
 function play(timeStamp) {
-  if (!gameOver) {
+  if (!gameover) {
     window.requestAnimationFrame(play);
     if (y >= 15 - shapes[shape_key].length) {
       x = start_x;
       y = start_y;
     }
+
     undraw(x, y);
     if (!init_flag) {
       init_Board();
     }
-
+    gameOver();
     draw();
     tracking_game_state(x, y);
     draw_landed_shapes();
+  }
+  if (gameover) {
+    reset();
   }
 }
