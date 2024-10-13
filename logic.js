@@ -94,6 +94,9 @@ function checkIfgameOver() {
         landed[i][j] = 0;
       }
     }
+    keys = Object.keys(shapes);
+    randnum = Math.floor(Math.random() * keys.length);
+    shape_key = keys[randnum];
     return;
   }
 }
@@ -121,7 +124,6 @@ function updateLives() {
     hit = false;
     lives -= 1;
     livesNode.nodeValue = `Lives: ${lives}`;
-    console.log("lives", lives);
     return 0;
   }
 }
