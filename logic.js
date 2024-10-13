@@ -74,11 +74,14 @@ function draw() {
   }
 }
 
-function tracking_placed_shapes(x, y) {
+function tracking_placed_shapes(x, y, collision) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
         if (y >= 15 - shapes[shape_key].length) {
+          landed[y + i][x + j] = 1;
+        }
+        if (collision == true) {
           landed[y + i][x + j] = 1;
         }
       }
@@ -98,7 +101,7 @@ function tracking_game_state(x, y) {
 
 /********************Eventlisteners */
 let collision = false;
-let z_collision = false;
+
 //Exists to load the playing board instantly.
 window.addEventListener("load", play());
 //Change html node to canvas.
@@ -125,16 +128,16 @@ window.addEventListener(
           for (let i = 0; i < shapes[shape_key].length; i++) {
             console.log("i", i);
             for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              console.log("j", j);
+              console.log("j", landed[y + shapes[shape_key].length][x + j]);
 
-              if (
-                landed[y + shapes[shape_key].length][x + j] != 1 &&
-                landed[y + shapes[shape_key].length][x] != 1 /* &&
-                landed[y + shapes[shape_key].length][x + 1] != 1 */
-              ) {
+              if (landed[y + shapes[shape_key].length][x + j] != 1) {
                 collision = false;
               } else {
                 collision = true;
+                tracking_placed_shapes(x, y, collision);
+                x = start_x;
+                y = start_y;
+                return;
               }
             }
           }
@@ -179,7 +182,6 @@ window.addEventListener(
           if (!collision) {
             x--;
           }
-          tracking_placed_shapes(x, y);
         }
         if (x == 0) {
           x = 0;
