@@ -6,13 +6,14 @@ let gameover = false;
 let score = 0;
 let lives = 3;
 let hit = false;
+let collision = false;
 
 let scoreElement = document.getElementById("score");
-let scoreNode = document.createTextNode(`Score: ${score} `);
+let scoreNode = document.createTextNode(`Score: ${score}  `);
 scoreElement.appendChild(scoreNode);
 
 let livesElement = document.getElementById("score");
-let livesNode = document.createTextNode(`Lives: ${lives}`);
+let livesNode = document.createTextNode(` Lives: ${lives}`);
 livesElement.appendChild(livesNode);
 
 const canvas = document.getElementById("playing_board");
@@ -31,7 +32,6 @@ let [
 ] = init_Board();
 
 /********************functions */
-/*******************Loop */
 
 function undraw() {
   for (let i = 0; i < playing_board.length; i++) {
@@ -83,11 +83,11 @@ function draw() {
 
 function checkIfgameOver() {
   const allEqual = (arr) => arr.every((val) => val === 0);
-
   const result = allEqual(landed[0]);
 
   if (!result) {
     hit = true;
+    lives -= 1;
     updateLives();
     for (let i = 0; i < landed.length; i++) {
       for (let j = 0; j < landed[0].length; j++) {
@@ -116,30 +116,27 @@ function checkBoardForPoints() {
 }
 
 function updateLives() {
-  if (hit && lives <= 0) {
-    hit = false;
+  if (lives <= 0) {
     gameover = true;
-    console.log("Game over", gameover);
-  } else if (hit) {
+    lives = 3;
+    score = 0;
+  }
+  if (hit) {
     hit = false;
-    lives -= 1;
-    livesNode.nodeValue = `Lives: ${lives}`;
+    livesNode.nodeValue = ` Lives: ${lives}`;
     return 0;
   }
 }
 
 function updateScore() {
   score += 10;
-  scoreNode.nodeValue = `Score: ${score}`;
+  scoreNode.nodeValue = `Score: ${score} `;
 }
 
 function reset() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[0].length; j++) {
       landed[i][j] = 0;
-      lives = 3;
-      score = 0;
-      gameover = false;
     }
   }
 
@@ -149,14 +146,10 @@ function reset() {
       playing_board[i][j] = 0;
     }
   }
-  keys = Object.keys(shapes);
-  randnum = Math.floor(Math.random() * keys.length);
-  shape_key = keys[randnum];
-  init_Board();
+  randomShape();
 }
 
 function tracking_placed_shapes(x, y, collision) {
-  console.log("Here");
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
@@ -181,8 +174,20 @@ function tracking_game_state(x, y) {
   }
 }
 
+function randomShape() {
+  keys = Object.keys(shapes);
+  randnum = Math.floor(Math.random() * keys.length);
+  shape_key = keys[randnum];
+}
+
+function collisionCheck() {
+  collision = true;
+  tracking_placed_shapes(x, y, collision);
+  x = start_x;
+  y = start_y;
+  randomShape();
+}
 /********************Eventlisteners */
-let collision = false;
 
 //Exists to load the playing board instantly.
 window.addEventListener("load", play());
@@ -202,13 +207,8 @@ window.addEventListener(
               if (landed[y + shapes[shape_key].length][x + j] != 1) {
                 collision = false;
               } else {
-                collision = true;
-                tracking_placed_shapes(x, y, collision);
-                x = start_x;
-                y = start_y;
-                keys = Object.keys(shapes);
-                randnum = Math.floor(Math.random() * keys.length);
-                shape_key = keys[randnum];
+                collisionCheck();
+
                 return;
               }
             }
@@ -219,13 +219,8 @@ window.addEventListener(
           }
 
           if (y + shapes[shape_key].length == playing_board_rows) {
-            collision = true;
-            tracking_placed_shapes(x, y, collision);
-            x = start_x;
-            y = start_y;
-            keys = Object.keys(shapes);
-            randnum = Math.floor(Math.random() * keys.length);
-            shape_key = keys[randnum];
+            collisionCheck();
+
             checkBoardForPoints();
             checkIfgameOver();
           }
@@ -298,11 +293,16 @@ window.addEventListener(
 /*********************** */
 
 //Init game loop.
-window.requestAnimationFrame(play);
+////Här
 
+window.requestAnimationFrame(play);
+let start;
 function play(timeStamp) {
+  if (start === undefined) {
+    start = timeStamp;
+  }
+  const elapsed = timestamp - start;
   if (!gameover) {
-    window.requestAnimationFrame(play);
     if (y >= playing_board_rows - shapes[shape_key].length) {
       x = start_x;
       y = start_y;
@@ -316,8 +316,16 @@ function play(timeStamp) {
     draw();
     tracking_game_state(x, y);
     draw_landed_shapes();
+    updateLives();
+    update();
+    if (shift < 200) {
+      window.requestAnimationFrame(play);
+    }
   }
   if (gameover) {
+    updateLives();
     reset();
+
+    gameover = false;
   }
 }
