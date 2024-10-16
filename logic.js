@@ -7,6 +7,7 @@ let score = 0;
 let lives = 3;
 let hit = false;
 let collision = false;
+let gameSpeedLimit = 0;
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score}  `);
@@ -39,6 +40,7 @@ function undraw() {
       playing_board[i][j] = 0;
     }
   }
+  return;
 }
 
 function draw_landed_shapes() {
@@ -50,6 +52,7 @@ function draw_landed_shapes() {
       }
     }
   }
+  return;
 }
 
 function draw_Shape() {
@@ -66,6 +69,7 @@ function draw_Shape() {
     }
   }
   draw_landed_shapes();
+  return;
 }
 
 function draw() {
@@ -79,6 +83,7 @@ function draw() {
       draw_Shape(canvas, ctx, x, y);
     }
   }
+  return;
 }
 
 function checkIfgameOver() {
@@ -99,6 +104,7 @@ function checkIfgameOver() {
     shape_key = keys[randnum];
     return;
   }
+  return;
 }
 
 function checkBoardForPoints() {
@@ -113,6 +119,7 @@ function checkBoardForPoints() {
       }
     }
   }
+  return;
 }
 
 function updateLives() {
@@ -126,11 +133,13 @@ function updateLives() {
     livesNode.nodeValue = ` Lives: ${lives}`;
     return 0;
   }
+  return;
 }
 
 function updateScore() {
   score += 10;
   scoreNode.nodeValue = `Score: ${score} `;
+  return;
 }
 
 function reset() {
@@ -147,6 +156,7 @@ function reset() {
     }
   }
   randomShape();
+  return;
 }
 
 function tracking_placed_shapes(x, y, collision) {
@@ -172,12 +182,14 @@ function tracking_game_state(x, y) {
       }
     }
   }
+  return;
 }
 
 function randomShape() {
   keys = Object.keys(shapes);
   randnum = Math.floor(Math.random() * keys.length);
   shape_key = keys[randnum];
+  return;
 }
 
 function collisionCheck() {
@@ -186,7 +198,35 @@ function collisionCheck() {
   x = start_x;
   y = start_y;
   randomShape();
+  return;
 }
+
+function y_movement() {
+  if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
+    for (let i = 0; i < shapes[shape_key].length; i++) {
+      for (let j = 0; j < shapes[shape_key][i].length; j++) {
+        if (landed[y + shapes[shape_key].length][x + j] != 1) {
+          collision = false;
+        } else {
+          collisionCheck();
+          return;
+        }
+      }
+    }
+
+    if (!collision) {
+      y++;
+    }
+
+    if (y + shapes[shape_key].length == playing_board_rows) {
+      collisionCheck();
+
+      checkBoardForPoints();
+      checkIfgameOver();
+    }
+  }
+}
+
 /********************Eventlisteners */
 
 //Exists to load the playing board instantly.
@@ -202,30 +242,8 @@ window.addEventListener(
       case "s":
       case "ArrowDown":
         if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
-          for (let i = 0; i < shapes[shape_key].length; i++) {
-            for (let j = 0; j < shapes[shape_key][i].length; j++) {
-              if (landed[y + shapes[shape_key].length][x + j] != 1) {
-                collision = false;
-              } else {
-                collisionCheck();
-
-                return;
-              }
-            }
-          }
-
-          if (!collision) {
-            y++;
-          }
-
-          if (y + shapes[shape_key].length == playing_board_rows) {
-            collisionCheck();
-
-            checkBoardForPoints();
-            checkIfgameOver();
-          }
+          y_movement();
         }
-
         break;
       case "a":
       case "ArrowLeft":
@@ -295,13 +313,16 @@ window.addEventListener(
 //Init game loop.
 ////Här
 
-window.requestAnimationFrame(play);
-let start;
-function play(timeStamp) {
-  if (start === undefined) {
-    start = timeStamp;
+/* window.requestAnimationFrame(play); */
+function update() {
+  gameSpeedLimit++;
+
+  if (gameSpeedLimit == 200) {
+    gameSpeedLimit = 0;
+    y_movement();
   }
-  const elapsed = timestamp - start;
+}
+function play() {
   if (!gameover) {
     if (y >= playing_board_rows - shapes[shape_key].length) {
       x = start_x;
@@ -317,10 +338,7 @@ function play(timeStamp) {
     tracking_game_state(x, y);
     draw_landed_shapes();
     updateLives();
-    update();
-    if (shift < 200) {
-      window.requestAnimationFrame(play);
-    }
+    update(y);
   }
   if (gameover) {
     updateLives();
@@ -328,4 +346,6 @@ function play(timeStamp) {
 
     gameover = false;
   }
+
+  window.requestAnimationFrame(play);
 }
