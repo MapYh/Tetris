@@ -10,7 +10,6 @@ let hit = false;
 let colorForShapes = ["purple", "red", "gold", "green", "cyan", "blue", "Brown"]
 let gameSpeedLimit = 0;
 let shapeColor = colorForShapes[Math.ceil(Math.random() * colorForShapes.length-1)];
-console.log(Math.random() * colorForShapes.length-1);
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score}`);
@@ -53,6 +52,9 @@ function draw_landed_shapes() {
       if (landed[i][j] !== 0) {
         ctx.fillStyle = "green";
         ctx.fillRect(50 * j, 50 * i, square_size, square_size);
+        ctx.beginPath();
+        ctx.rect( 50 * j, 50 * i, square_size, square_size);
+        ctx.stroke();
       }
     }
   }
@@ -71,6 +73,12 @@ function draw_Shape() {
           square_size,
           square_size
         );
+        ctx.beginPath();
+        ctx.rect( 50 * j + x * 50,
+            50 * i + y * 50,
+            square_size,
+            square_size);
+        ctx.stroke();
       }
     }
   }
