@@ -105,22 +105,8 @@ function checkIfgameOver() {
     return;
   }
   return;
-}
-
-/* function checkBoardForPoints() {
-  for (let i = 0; i < landed.length; i++) {
-    const allEqual = (arr) => arr.every((val) => val === 1);
-    const result = allEqual(landed[i]);
-
-    if (result) {
-      updateScore();
-      for (let j = 0; j < landed.length; j++) {
-        landed[i][j] = 0;
-      }
-    }
-  }
-  return;
-} */
+} 
+ 
 
 function updateLives() {
   if (lives <= 0) {
@@ -160,61 +146,89 @@ function reset() {
 }
 
 
-/* function tracking_placed_shapes(x, y, collision) {
-  if (collision) {
-    for (let i = 0; i < shapes[shape_key].length; i++) {
-      for (let j = 0; j < shapes[shape_key][i].length; j++) {
-        if (shapes[shape_key][i][j] != 0) {
-          landed[y + i][x + j] = 1;
-          console.log(landed);
-          console.log(y);
-        }
-      }
-    }
-  }
-} */
-
 function tracking_placed_shapes(x, y, collision) {
   if (collision) {
     for (let i = 0; i < shapes[shape_key].length; i++) {
       for (let j = 0; j < shapes[shape_key][i].length; j++) {
-        if (shapes[shape_key][i][j] != 0) {
-          landed[y + i][x + j] = 1;
+        if (shapes[shape_key][i][j] !== 0) {
+          landed[y + i][x + j] = 1; // Place shape in landed matrix
         }
       }
     }
   }
 }
-
 
 function tracking_game_state(x, y) {
   //Places ones in the board array in the current shape to keep track of the game state.
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      if (shapes[shape_key][i][j] != 0) {
-        playing_board[y + i][x + j] = 1;
-      }
+ 
+        if (shapes[shape_key][i][j] != 0) {
+          playing_board[y + i][x + j] = 1;
+        }
+      
+      
     }
   }
   return;
 }
 
+
+
 function randomShape() {
   keys = Object.keys(shapes);
   randnum = Math.floor(Math.random() * keys.length);
   shape_key = keys[randnum];
-  return;
+  return randnum; // Return the random index
+}
+
+function rotateShape(shape) {
+  const rows = shape.length;
+  const cols = shape[0].length;
+  let rotated = Array.from({ length: cols }, () => Array(rows).fill(0));
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      rotated[j][rows - 1 - i] = shape[i][j];
+    }
+  }
+  return rotated;
+}
+
+
+function canRotate(rotatedShape) {
+  for (let i = 0; i < rotatedShape.length; i++) {
+    for (let j = 0; j < rotatedShape[i].length; j++) {
+      if (rotatedShape[i][j] !== 0) {
+        // Check if the rotation goes out of bounds horizontally or vertically
+        if (
+          y + i >= playing_board_rows ||
+          x + j < 0 ||
+          x + j >= playing_board_columns
+        ) {
+          return false;
+        }
+        // Check collision with landed shapes
+        if (landed[y + i][x + j] === 1) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
 }
 
 function collisionCheck() {
-  
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      if (shapes[shape_key][i][j] != 0) {
-        console.log("y",y);
-        console.log("y+i",y+i);
-        if (y + i +1 >= playing_board_rows || landed[y + i][x + j] === 1) {
-          return true; // Collision detected
+      if (shapes[shape_key][i][j] !== 0) {
+        // Check if we're going out of bounds
+        if (y + i +1>= playing_board_rows -1) {
+          return true; // Collision with the bottom
+        }
+        // Check collision with landed shapes
+        if (y + i + 1 < playing_board_rows && landed[y + i + 1][x + j] === 1) {
+          return true; // Collision detected with landed shape
         }
       }
     }
@@ -223,19 +237,21 @@ function collisionCheck() {
 }
 
 function y_movement() {
- 
-    y++; // Move shape down by 1
-     if (collisionCheck()) {
-     
-      y--; /// Move back up one row to prevent overlapping
-      tracking_placed_shapes(x, y, true); // Place the shape in the landed array
-      x = start_x; // Reset position for new shape
-      y = start_y;
-      randomShape(); // Generate new shape
-      checkBoardForPoints();
-      checkIfgameOver();
-    }
-  
+  if (!collisionCheck()) {
+    y++; // Move shape down by 1 only if there is no collision
+  } else {
+    // Collision detected
+    // Instead of y--, we set y to the maximum position it can land
+   /*  y = playing_board_rows - shapes[shape_key].length; // Set to the position just before it goes out of bounds */
+    tracking_placed_shapes(x, y, true); // Place the shape in the landed array
+    checkBoardForPoints();
+    checkIfgameOver();
+    
+    // Reset x and y for the new shape
+    x = start_x; // Center the new shape
+    y = 0; // Start from the top
+    randomShape(); // Generate new shape
+  }
 }
 
 function update() {
@@ -249,25 +265,19 @@ function update() {
 
 function checkBoardForPoints() {
   for (let i = 0; i < landed.length; i++) {
-    // Check if the row is completely filled with '1's
     const isFullRow = landed[i].every(cell => cell === 1);
 
     if (isFullRow) {
-      // Clear the row by setting all cells to 0
-      for (let j = 0; j < landed[i].length; j++) {
-        landed[i][j] = 0;
-      }
-
-      // Shift all rows above down by one
+      // Clear the row and shift everything down
       for (let row = i; row > 0; row--) {
         landed[row] = [...landed[row - 1]];
       }
 
-      // Clear the top row to prevent artifacts
-      landed[0] = Array(landed[0].length).fill(0);
+     
 
-      // Update score after clearing a line
-      updateScore();
+      landed[0] = Array(landed[0].length).fill(0); // Clear the top row
+      updateScore(); // Increase score after clearing row
+     
     }
   }
 }
@@ -345,6 +355,13 @@ window.addEventListener(
         }
 
         break;
+        case " ":
+          // Attempt to rotate the shape
+          const rotatedShape = rotateShape(shapes[shape_key]);
+          if (canRotate(rotatedShape)) {
+            shapes[shape_key] = rotatedShape; // Apply the rotation if valid
+          }
+          break;
       default:
         return; // Quit when this doesn't handle the key event.
     }
@@ -364,7 +381,9 @@ window.addEventListener(
 //Init game loop.
 function play() {
   if (!gameover) {
-    if (y >= playing_board_rows - shapes[shape_key].length) {
+
+    if (y >= playing_board_rows-shapes[shape_key].length) {
+     
       x = start_x;
       y = start_y;
     }
@@ -376,7 +395,7 @@ function play() {
 
     checkIfgameOver();
     draw();
-    tracking_game_state(x, y);
+    tracking_game_state(x, y, true);
     updateLives();
     update();
   } else {
