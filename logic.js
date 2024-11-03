@@ -12,11 +12,11 @@ let gameSpeedLimit = 0;
 let shapeColor = colorForShapes[Math.ceil(Math.random() * colorForShapes.length-1)];
 
 let scoreElement = document.getElementById("score");
-let scoreNode = document.createTextNode(`Score: ${score}`);
+let scoreNode = document.createTextNode(`Score: ${score} `);
 scoreElement.appendChild(scoreNode);
 
-let livesElement = document.getElementById("score");
-let livesNode = document.createTextNode(`Lives: ${lives}`);
+let livesElement = document.getElementById("lives");
+let livesNode = document.createTextNode(`Lives: ${lives} `);
 livesElement.appendChild(livesNode);
 
 const canvas = document.getElementById("playing_board");
@@ -117,10 +117,12 @@ function checkIfgameOver() {
   } 
 
 function updateLives() {
-  if (lives <= 0) {
+  if (lives == 0) {
     gameover = true;
     lives = 3;
+    livesNode.nodeValue = `Lives: ${lives}`;
     score = 0;
+    scoreNode.nodeValue = `Score: ${score}`;
   }
   if (hit) {
     hit = false;
@@ -142,6 +144,7 @@ function reset() {
   randomShape();
   x = start_x;
   y = start_y;
+  score = 0; 
   
 }
 
@@ -304,6 +307,9 @@ function play() {
     draw();
     update();
   } else {
+    
+    alert("Game over")
+    score = 0;
     updateLives();
     reset();
     gameover = false;
