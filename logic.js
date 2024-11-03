@@ -7,8 +7,10 @@ let gameover = false;
 let score = 0;
 let lives = 3;
 let hit = false;
-let collision = false;
+let colorForShapes = ["purple", "red", "gold", "green", "cyan", "blue", "Brown"]
 let gameSpeedLimit = 0;
+let shapeColor = colorForShapes[Math.ceil(Math.random() * colorForShapes.length-1)];
+console.log(Math.random() * colorForShapes.length-1);
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score}`);
@@ -34,6 +36,8 @@ let [
   randnum,
 ] = init_Board();
 
+
+
 /********************functions */
 
 function undraw() {
@@ -41,6 +45,8 @@ function undraw() {
   return;
 }
 
+
+console.log(shapeColor);
 function draw_landed_shapes() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[i].length; j++) {
@@ -54,10 +60,11 @@ function draw_landed_shapes() {
 }
 
 function draw_Shape() {
+    
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] !== 0) {
-        ctx.fillStyle = "blue"; // Shape color
+        ctx.fillStyle = shapeColor; ; // Shape color
         ctx.fillRect(
           50 * j + x * 50,
           50 * i + y * 50,
@@ -71,6 +78,7 @@ function draw_Shape() {
 }
 
 function draw() {
+    
   canvas.width = square_size * playing_board_columns; // 350px.
   canvas.height = square_size * playing_board_rows; // 500px.
   undraw();
@@ -126,6 +134,7 @@ function reset() {
   randomShape();
   x = start_x;
   y = start_y;
+  
 }
 
 function tracking_placed_shapes(x, y, collision) {
@@ -159,6 +168,7 @@ function randomShape() {
     keys = Object.keys(shapes);
     randnum = Math.floor(Math.random() * keys.length);
     shape_key = keys[randnum];
+    shapeColor = colorForShapes[Math.floor(Math.random() * colorForShapes.length-1)];
     return randnum; // Return the random index
 }
 
@@ -214,6 +224,7 @@ function y_movement() {
 }
 
 function update() {
+    
   gameSpeedLimit++;
   if (gameSpeedLimit === 200) {
     gameSpeedLimit = 0;
@@ -268,6 +279,8 @@ window.addEventListener("keydown", (event) => {
       if (canRotate(rotatedShape)) shapes[shape_key] = rotatedShape;
       break;
   }
+ 
+  
   draw();
   event.preventDefault();
 });
@@ -277,6 +290,7 @@ window.addEventListener("keydown", (event) => {
 //Init game loop.
 function play() {
   if (!gameover) {
+    
     if (!init_flag) init_Board();
     checkIfgameOver();
     draw();
