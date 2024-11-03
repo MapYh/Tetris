@@ -107,7 +107,7 @@ function checkIfgameOver() {
   return;
 }
 
-function checkBoardForPoints() {
+/* function checkBoardForPoints() {
   for (let i = 0; i < landed.length; i++) {
     const allEqual = (arr) => arr.every((val) => val === 1);
     const result = allEqual(landed[i]);
@@ -120,7 +120,7 @@ function checkBoardForPoints() {
     }
   }
   return;
-}
+} */
 
 function updateLives() {
   if (lives <= 0) {
@@ -159,20 +159,34 @@ function reset() {
   return;
 }
 
-function tracking_placed_shapes(x, y, collision) {
-  for (let i = 0; i < shapes[shape_key].length; i++) {
-    for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      if (shapes[shape_key][i][j] != 0) {
-        if (y >= playing_board_rows - shapes[shape_key].length) {
+
+/* function tracking_placed_shapes(x, y, collision) {
+  if (collision) {
+    for (let i = 0; i < shapes[shape_key].length; i++) {
+      for (let j = 0; j < shapes[shape_key][i].length; j++) {
+        if (shapes[shape_key][i][j] != 0) {
           landed[y + i][x + j] = 1;
+          console.log(landed);
+          console.log(y);
         }
-        if (collision == true) {
+      }
+    }
+  }
+} */
+
+function tracking_placed_shapes(x, y, collision) {
+  if (collision) {
+    for (let i = 0; i < shapes[shape_key].length; i++) {
+      for (let j = 0; j < shapes[shape_key][i].length; j++) {
+        if (shapes[shape_key][i][j] != 0) {
           landed[y + i][x + j] = 1;
         }
       }
     }
   }
 }
+
+
 function tracking_game_state(x, y) {
   //Places ones in the board array in the current shape to keep track of the game state.
   for (let i = 0; i < shapes[shape_key].length; i++) {
@@ -193,45 +207,78 @@ function randomShape() {
 }
 
 function collisionCheck() {
-  collision = true;
-  tracking_placed_shapes(x, y, collision);
-  x = start_x;
-  y = start_y;
-  randomShape();
-  return;
-}
-
-function y_movement() {
-  if (y < playing_board_rows - shapes[shape_key].length && y >= 0) {
-    for (let i = 0; i < shapes[shape_key].length; i++) {
-      for (let j = 0; j < shapes[shape_key][i].length; j++) {
-        if (landed[y + shapes[shape_key].length][x + j] != 1) {
-          collision = false;
-        } else {
-          collisionCheck();
-          return;
+  
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      if (shapes[shape_key][i][j] != 0) {
+        console.log("y",y);
+        console.log("y+i",y+i);
+        if (y + i +1 >= playing_board_rows || landed[y + i][x + j] === 1) {
+          return true; // Collision detected
         }
       }
     }
+  }
+  return false;
+}
 
-    if (!collision) {
-      y++;
-    }
-
-    if (y + shapes[shape_key].length == playing_board_rows) {
-      collisionCheck();
-
+function y_movement() {
+ 
+    y++; // Move shape down by 1
+     if (collisionCheck()) {
+     
+      y--; /// Move back up one row to prevent overlapping
+      tracking_placed_shapes(x, y, true); // Place the shape in the landed array
+      x = start_x; // Reset position for new shape
+      y = start_y;
+      randomShape(); // Generate new shape
       checkBoardForPoints();
       checkIfgameOver();
     }
+  
+}
+
+function update() {
+  gameSpeedLimit++;
+
+  if (gameSpeedLimit == 200) {
+    gameSpeedLimit = 0;
+    y_movement();
   }
 }
+
+function checkBoardForPoints() {
+  for (let i = 0; i < landed.length; i++) {
+    // Check if the row is completely filled with '1's
+    const isFullRow = landed[i].every(cell => cell === 1);
+
+    if (isFullRow) {
+      // Clear the row by setting all cells to 0
+      for (let j = 0; j < landed[i].length; j++) {
+        landed[i][j] = 0;
+      }
+
+      // Shift all rows above down by one
+      for (let row = i; row > 0; row--) {
+        landed[row] = [...landed[row - 1]];
+      }
+
+      // Clear the top row to prevent artifacts
+      landed[0] = Array(landed[0].length).fill(0);
+
+      // Update score after clearing a line
+      updateScore();
+    }
+  }
+}
+
+
 
 /********************Eventlisteners */
 
 //Exists to load the playing board instantly.
 window.addEventListener("load", play());
-//Change html node to canvas.
+//Input to movement.
 window.addEventListener(
   "keydown",
   function (event) {
@@ -308,20 +355,13 @@ window.addEventListener(
   true
 );
 
+
+
+
+
 /*********************** */
 
 //Init game loop.
-////Här
-
-/* window.requestAnimationFrame(play); */
-function update() {
-  gameSpeedLimit++;
-
-  if (gameSpeedLimit == 200) {
-    gameSpeedLimit = 0;
-    y_movement();
-  }
-}
 function play() {
   if (!gameover) {
     if (y >= playing_board_rows - shapes[shape_key].length) {
@@ -329,21 +369,19 @@ function play() {
       y = start_y;
     }
 
-    undraw(x, y);
+    undraw();
     if (!init_flag) {
       init_Board();
     }
+
     checkIfgameOver();
     draw();
     tracking_game_state(x, y);
-    draw_landed_shapes();
     updateLives();
-    update(y);
-  }
-  if (gameover) {
+    update();
+  } else {
     updateLives();
     reset();
-
     gameover = false;
   }
 
