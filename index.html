@@ -8,18 +8,21 @@
   </head>
   <body>
     <section class="main">
-      <canvas id="playing_board">Tetris</canvas>
-      <section class="playing_board__side_field">
-        <section class="playing_board__side_field__score_lives">
+      <canvas id="playing_board" class="headings--font">Tetris</canvas>
+      <section class="playing_board__side_field playing_board--styling">
+        <section class="playing_board__side_field__score_lives counter_styling">
           <div id="score" class="score_lives__score"></div>
           <div id="lives" class="score_lives__lives"></div>
         </section>
-        <section class="start_button"><button>Start</button></section>
+        <section>
+          <button class="start_button start_button_styling button--font">
+            Start
+          </button>
+        </section>
       </section>
     </section>
   </body>
 
   <script type="module" src="logic.js"></script>
   <script type="module" src="init.js"></script>
-  
 </html>

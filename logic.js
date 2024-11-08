@@ -1,4 +1,3 @@
-
 import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 
 /********************Shapes    */
@@ -7,9 +6,18 @@ let gameover = false;
 let score = 0;
 let lives = 3;
 let hit = false;
-let colorForShapes = ["purple", "red", "gold", "green", "cyan", "blue", "Brown"]
+let colorForShapes = [
+  "#4285F4",
+  "#FFEB3B",
+  "#34A853",
+  "#FB8C00 ",
+  "#EA4335",
+  /*  "blue",
+  "Brown", */
+];
 let gameSpeedLimit = 0;
-let shapeColor = colorForShapes[Math.ceil(Math.random() * colorForShapes.length-1)];
+let shapeColor =
+  colorForShapes[Math.ceil(Math.random() * colorForShapes.length - 1)];
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score} `);
@@ -35,15 +43,12 @@ let [
   randnum,
 ] = init_Board();
 
-
-
 /********************functions */
 
 function undraw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas before redrawing
   return;
 }
-
 
 console.log(shapeColor);
 function draw_landed_shapes() {
@@ -53,7 +58,7 @@ function draw_landed_shapes() {
         ctx.fillStyle = "green";
         ctx.fillRect(50 * j, 50 * i, square_size, square_size);
         ctx.beginPath();
-        ctx.rect( 50 * j, 50 * i, square_size, square_size);
+        ctx.rect(50 * j, 50 * i, square_size, square_size);
         ctx.stroke();
       }
     }
@@ -62,11 +67,10 @@ function draw_landed_shapes() {
 }
 
 function draw_Shape() {
-    
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] !== 0) {
-        ctx.fillStyle = shapeColor; ; // Shape color
+        ctx.fillStyle = shapeColor; // Shape color
         ctx.fillRect(
           50 * j + x * 50,
           50 * i + y * 50,
@@ -74,10 +78,7 @@ function draw_Shape() {
           square_size
         );
         ctx.beginPath();
-        ctx.rect( 50 * j + x * 50,
-            50 * i + y * 50,
-            square_size,
-            square_size);
+        ctx.rect(50 * j + x * 50, 50 * i + y * 50, square_size, square_size);
         ctx.stroke();
       }
     }
@@ -86,7 +87,6 @@ function draw_Shape() {
 }
 
 function draw() {
-    
   canvas.width = square_size * playing_board_columns; // 350px.
   canvas.height = square_size * playing_board_rows; // 500px.
   undraw();
@@ -96,25 +96,25 @@ function draw() {
 }
 
 function checkIfgameOver() {
-    const allEqual = (arr) => arr.every((val) => val === 0);
-    const result = allEqual(landed[0]);
-  
-    if (!result) {
-      hit = true;
-      lives -= 1;
-      updateLives();
-      for (let i = 0; i < landed.length; i++) {
-        for (let j = 0; j < landed[0].length; j++) {
-          landed[i][j] = 0;
-        }
+  const allEqual = (arr) => arr.every((val) => val === 0);
+  const result = allEqual(landed[0]);
+
+  if (!result) {
+    hit = true;
+    lives -= 1;
+    updateLives();
+    for (let i = 0; i < landed.length; i++) {
+      for (let j = 0; j < landed[0].length; j++) {
+        landed[i][j] = 0;
       }
-      keys = Object.keys(shapes);
-      randnum = Math.floor(Math.random() * keys.length);
-      shape_key = keys[randnum];
-      return;
     }
+    keys = Object.keys(shapes);
+    randnum = Math.floor(Math.random() * keys.length);
+    shape_key = keys[randnum];
     return;
-  } 
+  }
+  return;
+}
 
 function updateLives() {
   if (lives == 0) {
@@ -144,8 +144,7 @@ function reset() {
   randomShape();
   x = start_x;
   y = start_y;
-  score = 0; 
-  
+  score = 0;
 }
 
 function tracking_placed_shapes(x, y, collision) {
@@ -176,39 +175,35 @@ function tracking_placed_shapes(x, y, collision) {
   } */
 
 function randomShape() {
-    keys = Object.keys(shapes);
-    randnum = Math.floor(Math.random() * keys.length);
-    shape_key = keys[randnum];
-    shapeColor = colorForShapes[Math.floor(Math.random() * colorForShapes.length-1)];
-    return randnum; // Return the random index
+  keys = Object.keys(shapes);
+  randnum = Math.floor(Math.random() * keys.length);
+  shape_key = keys[randnum];
+  shapeColor =
+    colorForShapes[Math.floor(Math.random() * colorForShapes.length - 1)];
+  return randnum; // Return the random index
 }
 
-
-
-  
 function canRotate(rotatedShape) {
-    for (let i = 0; i < rotatedShape.length; i++) {
-      for (let j = 0; j < rotatedShape[i].length; j++) {
-        if (rotatedShape[i][j] !== 0) {
-          // Check if the rotation goes out of bounds horizontally or vertically
-          if (
-            y + i >= playing_board_rows ||
-            x + j < 0 ||
-            x + j >= playing_board_columns
-          ) {
-            return false;
-          }
-          // Check collision with landed shapes
-          if (landed[y + i][x + j] === 1) {
-            return false;
-          }
+  for (let i = 0; i < rotatedShape.length; i++) {
+    for (let j = 0; j < rotatedShape[i].length; j++) {
+      if (rotatedShape[i][j] !== 0) {
+        // Check if the rotation goes out of bounds horizontally or vertically
+        if (
+          y + i >= playing_board_rows ||
+          x + j < 0 ||
+          x + j >= playing_board_columns
+        ) {
+          return false;
+        }
+        // Check collision with landed shapes
+        if (landed[y + i][x + j] === 1) {
+          return false;
         }
       }
     }
-    return true;
   }
-
-
+  return true;
+}
 
 function collisionCheck() {
   for (let i = 0; i < shapes[shape_key].length; i++) {
@@ -235,7 +230,6 @@ function y_movement() {
 }
 
 function update() {
-    
   gameSpeedLimit++;
   if (gameSpeedLimit === 200) {
     gameSpeedLimit = 0;
@@ -255,17 +249,17 @@ function checkBoardForPoints() {
   }
 }
 function rotateShape(shape) {
-    const rows = shape.length;
-    const cols = shape[0].length;
-    let rotated = Array.from({ length: cols }, () => Array(rows).fill(0));
-  
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        rotated[j][rows - 1 - i] = shape[i][j];
-      }
+  const rows = shape.length;
+  const cols = shape[0].length;
+  let rotated = Array.from({ length: cols }, () => Array(rows).fill(0));
+
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      rotated[j][rows - 1 - i] = shape[i][j];
     }
-    return rotated;
   }
+  return rotated;
+}
 /********************Eventlisteners */
 
 window.addEventListener("load", play);
@@ -273,25 +267,28 @@ window.addEventListener("load", play);
 window.addEventListener("keydown", (event) => {
   if (event.defaultPrevented) return;
   switch (event.key) {
-    case"s":
+    case "s":
     case "ArrowDown":
       y_movement();
       break;
-    case"a":
+    case "a":
     case "ArrowLeft":
       if (x > 0 && !collisionCheck(x - 1, y)) x--;
       break;
-    case"d":
+    case "d":
     case "ArrowRight":
-      if (x < playing_board_columns - shapes[shape_key][0].length && !collisionCheck(x + 1, y)) x++;
+      if (
+        x < playing_board_columns - shapes[shape_key][0].length &&
+        !collisionCheck(x + 1, y)
+      )
+        x++;
       break;
     case " ":
       const rotatedShape = rotateShape(shapes[shape_key]);
       if (canRotate(rotatedShape)) shapes[shape_key] = rotatedShape;
       break;
   }
- 
-  
+
   draw();
   event.preventDefault();
 });
@@ -301,14 +298,12 @@ window.addEventListener("keydown", (event) => {
 //Init game loop.
 function play() {
   if (!gameover) {
-    
     if (!init_flag) init_Board();
     checkIfgameOver();
     draw();
     update();
   } else {
-    
-    alert("Game over")
+    alert("Game over");
     score = 0;
     updateLives();
     reset();
