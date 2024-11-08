@@ -1,14 +1,20 @@
-/* body {
-  background-color: red;
-} */
-/*test*/
 @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Montserrat:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap");
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f9;
+}
+
 #playing_board {
   border: 1px solid #00e5ff;
 }
 
 .main {
   display: flex;
+  height: 50dvh;
 }
 
 .playing_board__side_field__score_lives {
@@ -23,19 +29,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /*  height: 100%; */
 }
 
 .start_button_styling {
   background-color: #00e5ff; /* Electric Cyan */
   color: #2e2e2e; /* Dark Charcoal Gray for text */
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
   font-weight: bold;
   border: none;
-  border-radius: 6px;
+  border-radius: 0.25rem;
   cursor: pointer;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
+  color: #ffeb3b; /* Bright Yellow */
   transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 1rem;
 }
 
 /* Hover effect */
@@ -59,23 +68,20 @@
   background-color: #2e2e2e;
 }
 
-.playing_board__side_field {
-  background-color: #f4f4f9;
-}
-
 .counter_styling {
   font-family: "Roboto Mono", monospace;
   font-size: 20px;
   color: #34a853; /* Vibrant Green */
 }
 
+.headings--font {
+  font-family: "Press Start 2P", cursive;
+  font-size: 2rem;
+  color: #ffeb3b; /* Bright Yellow */
+}
+
 .playing_board--styling {
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
   color: #f4f4f9; /* Soft Off-White */
-}
-.button--font {
-  font-family: "Press Start 2P", cursive;
-  font-size: 24px;
-  color: #ffeb3b; /* Bright Yellow */
 }
