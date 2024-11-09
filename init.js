@@ -9,8 +9,8 @@ let x = Math.floor((playing_board_columns - 1) / 2); //Create a function that ch
 let y = 0;
 
 let shapes = {
-  vertical_line: [[1], [1], [1]],
-  horizontal_line: [[1, 1, 1]],
+  vertical_line: [[1], [1], [1], [1]],
+  horizontal_line: [[1, 1, 1, 1]],
   square: [
     [1, 1],
     [1, 1],

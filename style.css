@@ -5,7 +5,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f4f9;
+  background: linear-gradient(180deg, #0c0c0c, #3f3f3f);
 }
 
 #playing_board {

@@ -8,7 +8,7 @@ let lives = 4;
 let hit = false;
 let start = false;
 let pause = true;
-let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
+let colorForShapes = ["#00ff00", "#ffff00", "#ffaa00", "#aa00ff", "#00ffff"];
 let gameSpeedLimit = 10;
 let shapeColor =
   colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
@@ -69,6 +69,28 @@ let [
 
 /********************functions */
 
+function drawGrid() {
+  // Set grid line color to white
+  ctx.strokeStyle = "#cfcaca";
+
+  // Loop through rows and columns to draw the grid lines
+  for (let row = 0; row <= playing_board_rows; row++) {
+    // Draw horizontal lines
+    ctx.beginPath();
+    ctx.moveTo(0, row * square_size);
+    ctx.lineTo(playing_board_columns * square_size, row * square_size);
+    ctx.stroke();
+  }
+
+  for (let col = 0; col <= playing_board_columns; col++) {
+    // Draw vertical lines
+    ctx.beginPath();
+    ctx.moveTo(col * square_size, 0);
+    ctx.lineTo(col * square_size, playing_board_rows * square_size);
+    ctx.stroke();
+  }
+}
+
 function showGameOverScreen() {
   finalScoreNode.nodeValue = `${highScore}`; // Display the final score
   gameOverScreen.classList.remove("hidden"); // Show the game over overlay
@@ -99,6 +121,7 @@ function checkHighScore(score) {
 
 function undraw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas before redrawing
+  drawGrid();
   return;
 }
 
@@ -107,6 +130,7 @@ function draw_landed_shapes() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[i].length; j++) {
       if (landed[i][j] !== 0) {
+        ctx.strokeStyle = "#000000";
         ctx.fillStyle = landed[i][j];
         ctx.fillRect(50 * j, 50 * i, square_size, square_size);
         ctx.beginPath();
@@ -129,6 +153,7 @@ function draw_Shape() {
           square_size,
           square_size
         );
+        ctx.strokeStyle = "#000000";
         ctx.beginPath();
         ctx.rect(50 * j + x * 50, 50 * i + y * 50, square_size, square_size);
         ctx.stroke();
@@ -141,6 +166,7 @@ function draw_Shape() {
 function draw() {
   canvas.width = square_size * playing_board_columns; // 350px.
   canvas.height = square_size * playing_board_rows; // 500px.
+
   if (start) {
     undraw();
     draw_landed_shapes();
