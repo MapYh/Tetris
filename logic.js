@@ -354,8 +354,6 @@ window.addEventListener("keydown", (event) => {
     switch (event.key) {
       case "s":
       case "ArrowDown":
-        console.log(landed);
-
         if (!collisionCheck(0, 1)) {
           y_movement();
           checkBoardForPoints();
