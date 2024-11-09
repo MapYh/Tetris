@@ -1,15 +1,11 @@
 import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 
-////Things to addd
+////Things to add
 /* 
 Better styling, 
 
 better background, (github page like light from below,)
 
-
-
-
-add highscore,
 make a gameover screen.
 description with github pages link.
 
@@ -45,9 +41,15 @@ let livesElement = document.getElementById("lives");
 let livesNode = document.createTextNode(`Lives: ${lives} `);
 livesElement.appendChild(livesNode);
 
+const gameOverScreen = document.getElementById("gameOverScreen");
+const finalScoreElement = document.getElementById("finalScore");
+let finalScoreNode = document.createTextNode(`${highScore} `);
+finalScoreElement.appendChild(finalScoreNode);
+const restartButton = document.getElementById("restartButton");
+
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
-
+document.getElementById("gameOverScreen").classList.add("hidden");
 const startButton = document.querySelector(".start_button");
 startButton.addEventListener("click", () => {
   if (pause) {
@@ -82,6 +84,27 @@ let [
 
 /********************functions */
 
+function showGameOverScreen() {
+  finalScoreNode.nodeValue = `${highScore}`; // Display the final score
+  gameOverScreen.classList.remove("hidden"); // Show the game over overlay
+}
+
+function hideGameOverScreen() {
+  gameOverScreen.classList.add("hidden"); // Hide the overlay
+}
+
+function restartGame() {
+  // Reset the game variables and restart the game
+  score = 0;
+  lives = 3;
+  gameover = false;
+  hideGameOverScreen(); // Hide game over screen
+  reset(); // Reset the game board
+  play(); // Start the game loop again
+}
+restartButton.addEventListener("click", () => {
+  restartGame();
+});
 function checkHighScore(score) {
   if (score > highScore) {
     highScore = score;
@@ -165,6 +188,7 @@ function checkIfgameOver() {
 
 function updateLives() {
   if (lives == 0) {
+    showGameOverScreen();
     gameover = true;
     lives = 3;
     livesNode.nodeValue = `Lives: ${lives}`;
@@ -313,30 +337,32 @@ window.addEventListener("load", play);
 
 window.addEventListener("keydown", (event) => {
   if (event.defaultPrevented) return;
-  switch (event.key) {
-    case "s":
-    case "ArrowDown":
-      console.log(landed);
+  if (!pause && start) {
+    switch (event.key) {
+      case "s":
+      case "ArrowDown":
+        console.log(landed);
 
-      if (!collisionCheck(0, 1)) {
-        y_movement();
-        checkBoardForPoints();
-      } // Check downward collision
-      break;
-    case "a":
-    case "ArrowLeft":
-      if (!collisionCheck(-1, 0)) x--;
-      break;
-    case "d":
-    case "ArrowRight":
-      if (!collisionCheck(1, 0)) x++;
+        if (!collisionCheck(0, 1)) {
+          y_movement();
+          checkBoardForPoints();
+        } // Check downward collision
+        break;
+      case "a":
+      case "ArrowLeft":
+        if (!collisionCheck(-1, 0)) x--;
+        break;
+      case "d":
+      case "ArrowRight":
+        if (!collisionCheck(1, 0)) x++;
 
-      break;
-    case "w":
-    case "ArrowUp":
-      const rotatedShape = rotateShape(shapes[shape_key]);
-      if (canRotate(rotatedShape)) shapes[shape_key] = rotatedShape;
-      break;
+        break;
+      case "w":
+      case "ArrowUp":
+        const rotatedShape = rotateShape(shapes[shape_key]);
+        if (canRotate(rotatedShape)) shapes[shape_key] = rotatedShape;
+        break;
+    }
   }
 
   draw();
@@ -353,7 +379,6 @@ function play() {
     draw();
     update();
   } else {
-    alert("Game over");
     score = 0;
     updateLives();
     reset();

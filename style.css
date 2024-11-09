@@ -14,7 +14,7 @@ body {
 
 .main {
   display: flex;
-  height: 40dvh;
+  height: 50dvh;
 }
 
 .playing_board__side_field__score_lives {
@@ -147,4 +147,96 @@ body {
   font-family: "Roboto Mono", monospace;
   font-size: 20px;
   color: #34a853; /* Vibrant Green */
+}
+
+#gameOverScreen.hidden {
+  display: none;
+}
+
+.game-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.game-over h1 {
+  font-family: "Press Start 2P", cursive;
+  animation: gradientChange 5s ease-in-out infinite;
+  color: #ffeb3b; /* Bright Yellow */
+
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.restart_button_styling {
+  background-color: #00e5ff; /* Electric Cyan */
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
+  color: #ffeb3b; /* Bright Yellow */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 1rem;
+  cursor: pointer;
+}
+
+.restart_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hover effect */
+.restart_button_styling:hover {
+  background-color: #e91e63; /* Bright Magenta on hover */
+  transform: scale(1.05); /* Slightly enlarges on hover */
+}
+
+/* Active effect */
+.restart_button_styling:active {
+  background-color: #4285f4; /* Vibrant Blue on click */
+  transform: scale(0.98); /* Slightly shrinks when clicked */
+}
+
+/* Optional focus effect for accessibility */
+.restart_button_styling:focus {
+  outline: 2px solid #ffeb3b; /* Bright Yellow focus outline */
+}
+
+@keyframes gradientChange {
+  0% {
+    color: red;
+  }
+  25% {
+    color: orange;
+  }
+  50% {
+    color: yellow;
+  }
+  75% {
+    color: orange;
+  }
+  100% {
+    color: orangered;
+  }
+}
+
+.animated-text {
+  font-family: "Roboto Mono", monospace;
+  font-size: 1rem;
+
+  animation: gradientChange 5s ease-in-out infinite;
 }
