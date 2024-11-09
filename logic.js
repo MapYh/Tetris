@@ -3,10 +3,8 @@ import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 ////Things to add
 /* 
 Better styling, 
-
 better background, (github page like light from below,)
 
-make a gameover screen.
 description with github pages link.
 
 Look at other games and see what features they have.
@@ -366,7 +364,7 @@ window.addEventListener("keydown", (event) => {
   }
 
   draw();
-  event.preventDefault();
+  /* event.preventDefault(); */
 });
 
 /*********************** */
