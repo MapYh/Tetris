@@ -14,7 +14,7 @@ body {
 
 .main {
   display: flex;
-  height: 40dvh;
+  height: 35dvh;
 }
 
 .playing_board__side_field__score_lives {
@@ -197,6 +197,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1.5rem;
 }
 
 /* Hover effect */
@@ -236,7 +237,7 @@ body {
 
 .animated-text {
   font-family: "Roboto Mono", monospace;
-  font-size: 1rem;
+  font-size: 2rem;
 
   animation: gradientChange 5s ease-in-out infinite;
 }
