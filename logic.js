@@ -12,8 +12,6 @@ better background, (github page like light from below,)
 add highscore,
 make a gameover screen.
 description with github pages link.
-make it so that the block can be moved when 
-they are att the bottom before the freeze into place, atm they stick to the bottom
 
 Look at other games and see what features they have.
 what other rendering ways are there for graphics?
@@ -25,7 +23,7 @@ what other rendering ways are there for graphics?
 const square_size = 50;
 let gameover = false;
 let score = 0;
-let lives = 3;
+let lives = 4;
 let hit = false;
 let start = false;
 let pause = true;
@@ -33,13 +31,15 @@ let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
 let gameSpeedLimit = 10;
 let shapeColor =
   colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
-
-let colors_for_landed_shapes = [];
-/* colors_for_landed_shapes.push(shapeColor); */
+let highScore = 0;
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score} `);
 scoreElement.appendChild(scoreNode);
+
+let highScoreElement = document.querySelector(".highScore ");
+let highScoreNode = document.createTextNode(`Highscore: ${highScore} `);
+highScoreElement.appendChild(highScoreNode);
 
 let livesElement = document.getElementById("lives");
 let livesNode = document.createTextNode(`Lives: ${lives} `);
@@ -81,6 +81,13 @@ let [
 ] = init_Board();
 
 /********************functions */
+
+function checkHighScore(score) {
+  if (score > highScore) {
+    highScore = score;
+    highScoreNode.nodeValue = `Highscore: ${highScore}`;
+  }
+}
 
 function undraw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas before redrawing
@@ -174,6 +181,7 @@ function updateLives() {
 function updateScore() {
   score += 10;
   scoreNode.nodeValue = `Score: ${score}`;
+  checkHighScore(score);
   return;
 }
 
@@ -198,22 +206,6 @@ function tracking_placed_shapes(x, y, collision) {
     }
   }
 }
-
-//Useful for troubelshooting
-/* function tracking_game_state(x, y) {
-    //Places ones in the board array in the current shape to keep track of the game state.
-    for (let i = 0; i < shapes[shape_key].length; i++) {
-      for (let j = 0; j < shapes[shape_key][i].length; j++) {
-   
-          if (shapes[shape_key][i][j] != 0) {
-            playing_board[y + i][x + j] = 1;
-          }
-        
-        
-      }
-    }
-    return;
-  } */
 
 function randomShape() {
   keys = Object.keys(shapes);
@@ -248,18 +240,6 @@ function canRotate(rotatedShape) {
   return true;
 }
 
-/* function collisionCheck() {
-  for (let i = 0; i < shapes[shape_key].length; i++) {
-    for (let j = 0; j < shapes[shape_key][i].length; j++) {
-      if (shapes[shape_key][i][j] !== 0) {
-        if (y + i + 1 >= playing_board_rows) return true; // Reached bottom
-        if (landed[y + i + 1][x + j] !== 0) return true; // Colliding with landed shape
-      }
-    }
-  }
-  return false;
-} */
-//Works
 function collisionCheck(xOffset = 0, yOffset = 0) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
@@ -278,7 +258,7 @@ function collisionCheck(xOffset = 0, yOffset = 0) {
       }
     }
   }
-  checkBoardForPoints();
+
   return false;
 }
 function y_movement() {
@@ -337,22 +317,20 @@ window.addEventListener("keydown", (event) => {
     case "s":
     case "ArrowDown":
       console.log(landed);
-      /* y_movement(); */
-      if (!collisionCheck(0, 1)) y_movement(); // Check downward collision
+
+      if (!collisionCheck(0, 1)) {
+        y_movement();
+        checkBoardForPoints();
+      } // Check downward collision
       break;
     case "a":
     case "ArrowLeft":
-      /*   if (x > 0 && !collisionCheck(-1, y)) x--; */
       if (!collisionCheck(-1, 0)) x--;
       break;
     case "d":
     case "ArrowRight":
       if (!collisionCheck(1, 0)) x++;
-      /* if (
-        x < playing_board_columns - shapes[shape_key][0].length &&
-        !collisionCheck(1, y)
-      )
-        x++; */
+
       break;
     case "w":
     case "ArrowUp":

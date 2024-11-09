@@ -25,10 +25,12 @@ body {
 .score_lives__score {
   width: 10rem;
   margin-left: 1rem;
+  margin-top: 1rem;
 }
 .score_lives__lives {
   width: 10rem;
   margin-left: 1rem;
+  margin-top: 1rem;
 }
 
 .buttons {
@@ -136,4 +138,13 @@ body {
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
   color: #f4f4f9; /* Soft Off-White */
+}
+
+.highScore {
+  width: 20rem;
+
+  margin-left: 1rem;
+  font-family: "Roboto Mono", monospace;
+  font-size: 20px;
+  color: #34a853; /* Vibrant Green */
 }
