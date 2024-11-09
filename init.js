@@ -7,7 +7,6 @@ let start_x = 4;
 let start_y = 0;
 let x = Math.floor((playing_board_columns - 1) / 2); //Create a function that choses the best starting coordinates.
 let y = 0;
-let start = false;
 
 let shapes = {
   vertical_line: [[1], [1], [1]],
@@ -71,10 +70,10 @@ export default function init_Board() {
   landed = new Array(playing_board_rows);
   for (let i = 0; i < playing_board.length; i++) {
     // Creating an array of size "playing_board_columns" and filled of 0
-    playing_board[i] = new Array(playing_board_columns).fill(0);
-    landed[i] = new Array(playing_board_columns).fill(0);
+    playing_board[i] = new Array(playing_board_columns).fill(null);
+    landed[i] = new Array(playing_board_columns).fill(null);
   }
-
+  console.log(landed);
   //Init shapes on board.
   init_shapes_and_place(playing_board, shape_key);
 
@@ -96,7 +95,7 @@ function init_shapes_and_place(playing_board, shape_key) {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] != 0) {
-        playing_board[y + i][x + j] = 1;
+        playing_board[y + i][x + j] = 0;
       }
     }
   }

@@ -33,7 +33,10 @@ let pause = true;
 let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
 let gameSpeedLimit = 0;
 let shapeColor =
-  colorForShapes[Math.floor(Math.random() * colorForShapes.length - 1)];
+  colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
+
+let colors_for_landed_shapes = [];
+/* colors_for_landed_shapes.push(shapeColor); */
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score} `);
@@ -67,6 +70,7 @@ pauseButton.addEventListener("click", () => {
 });
 /*************Init playing board */
 let [
+  //Used for troubleshooting
   playing_board,
   init_flag,
   playing_board_rows,
@@ -89,7 +93,7 @@ function draw_landed_shapes() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[i].length; j++) {
       if (landed[i][j] !== 0) {
-        ctx.fillStyle = shapeColor;
+        ctx.fillStyle = landed[i][j];
         ctx.fillRect(50 * j, 50 * i, square_size, square_size);
         ctx.beginPath();
         ctx.rect(50 * j, 50 * i, square_size, square_size);
@@ -189,7 +193,7 @@ function tracking_placed_shapes(x, y, collision) {
     for (let i = 0; i < shapes[shape_key].length; i++) {
       for (let j = 0; j < shapes[shape_key][i].length; j++) {
         if (shapes[shape_key][i][j] !== 0) {
-          landed[y + i][x + j] = 1; // Place shape in landed matrix
+          landed[y + i][x + j] = shapeColor; // Place shape in landed matrix
         }
       }
     }
@@ -219,7 +223,8 @@ function randomShape() {
   shape_key = keys[randnum];
   shapeColor =
     colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
-  return randnum; // Return the random index
+
+  return; // Return the random index
 }
 
 function canRotate(rotatedShape) {
@@ -236,7 +241,7 @@ function canRotate(rotatedShape) {
           return false;
         }
         // Check collision with landed shapes
-        if (landed[y + i][x + j] === 1) {
+        if (landed[y + i][x + j] !== 0) {
           return false;
         }
       }
@@ -250,7 +255,7 @@ function collisionCheck() {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] !== 0) {
         if (y + i + 1 >= playing_board_rows) return true; // Reached bottom
-        if (landed[y + i + 1][x + j] === 1) return true; // Colliding with landed shape
+        if (landed[y + i + 1][x + j] !== 0) return true; // Colliding with landed shape
       }
     }
   }
@@ -282,7 +287,7 @@ function update() {
 
 function checkBoardForPoints() {
   for (let i = landed.length - 1; i >= 0; i--) {
-    if (landed[i].every((cell) => cell === 1)) {
+    if (landed[i].every((cell) => cell !== 0)) {
       for (let row = i; row > 0; row--) {
         landed[row] = [...landed[row - 1]]; // Shift rows down
       }
@@ -312,6 +317,7 @@ window.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "s":
     case "ArrowDown":
+      console.log(landed);
       y_movement();
       break;
     case "a":
