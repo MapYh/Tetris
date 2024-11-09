@@ -1,18 +1,5 @@
 import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 
-////Things to add
-/* 
-Better styling, 
-better background, (github page like light from below,)
-
-description with github pages link.
-
-Look at other games and see what features they have.
-what other rendering ways are there for graphics?
-
-
-*/
-
 /********************Shapes    */
 const square_size = 50;
 let gameover = false;
