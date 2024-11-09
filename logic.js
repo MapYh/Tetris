@@ -31,6 +31,7 @@ let score = 0;
 let lives = 3;
 let hit = false;
 let start = false;
+let pause = true;
 let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
 let gameSpeedLimit = 0;
 let shapeColor =
@@ -49,7 +50,22 @@ const ctx = canvas.getContext("2d");
 
 const startButton = document.querySelector(".start_button");
 startButton.addEventListener("click", () => {
+  if (pause) {
+    pause = false;
+
+    startButton.textContent = "Start";
+  }
   start = true;
+  pause = false;
+});
+
+const pauseButton = document.querySelector(".pause_button");
+pauseButton.addEventListener("click", () => {
+  if (!pause) {
+    pause = true;
+
+    startButton.textContent = "Continue";
+  }
 });
 /*************Init playing board */
 let [
@@ -183,6 +199,8 @@ function tracking_placed_shapes(x, y, collision) {
     checkBoardForPoints();
   }
 }
+
+//Useful for troubelshooting
 /* function tracking_game_state(x, y) {
     //Places ones in the board array in the current shape to keep track of the game state.
     for (let i = 0; i < shapes[shape_key].length; i++) {
@@ -243,7 +261,10 @@ function collisionCheck() {
 
 function y_movement() {
   if (!collisionCheck()) {
-    y++; // Move shape down by 1 only if there is no collision
+    if (!pause) {
+      y++;
+    }
+    // Move shape down by 1 only if there is no collision
   } else {
     tracking_placed_shapes(x, y, true); // Place shape in landed array on collision
     checkIfgameOver();
@@ -308,7 +329,7 @@ window.addEventListener("keydown", (event) => {
         x++;
       break;
     case "w":
-    case "":
+    case "ArrowUp":
       const rotatedShape = rotateShape(shapes[shape_key]);
       if (canRotate(rotatedShape)) shapes[shape_key] = rotatedShape;
       break;

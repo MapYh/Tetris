@@ -19,16 +19,23 @@ body {
 
 .playing_board__side_field__score_lives {
   display: flex;
+  width: 20rem;
 }
 
 .score_lives__score {
   width: 10rem;
 }
-
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
 .start_button {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 50%;
 }
 
 .start_button_styling {
@@ -61,6 +68,45 @@ body {
 
 /* Optional focus effect for accessibility */
 .start_button_styling:focus {
+  outline: 2px solid #ffeb3b; /* Bright Yellow focus outline */
+}
+
+.pause_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+
+.pause_button_styling {
+  background-color: #00e5ff; /* Electric Cyan */
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: "Press Start 2P", cursive;
+  font-size: 0.75rem;
+  color: #ffeb3b; /* Bright Yellow */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 1rem;
+}
+
+/* Hover effect */
+.pause_button_styling:hover {
+  background-color: #e91e63; /* Bright Magenta on hover */
+  transform: scale(1.05); /* Slightly enlarges on hover */
+}
+
+/* Active effect */
+.pause_button_styling:active {
+  background-color: #4285f4; /* Vibrant Blue on click */
+  transform: scale(0.98); /* Slightly shrinks when clicked */
+}
+
+/* Optional focus effect for accessibility */
+.pause_button_styling:focus {
   outline: 2px solid #ffeb3b; /* Bright Yellow focus outline */
 }
 
