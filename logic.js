@@ -12,7 +12,6 @@ better background, (github page like light from below,)
 add highscore,
 make a gameover screen.
 description with github pages link.
-save the block in the right color,
 make it so that the block can be moved when 
 they are att the bottom before the freeze into place, atm they stick to the bottom
 
@@ -31,7 +30,7 @@ let hit = false;
 let start = false;
 let pause = true;
 let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
-let gameSpeedLimit = 0;
+let gameSpeedLimit = 10;
 let shapeColor =
   colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
 
@@ -70,8 +69,7 @@ pauseButton.addEventListener("click", () => {
 });
 /*************Init playing board */
 let [
-  //Used for troubleshooting
-  playing_board,
+  playing_board, //Used for troubleshooting
   init_flag,
   playing_board_rows,
   playing_board_columns,
@@ -90,6 +88,7 @@ function undraw() {
 }
 
 function draw_landed_shapes() {
+  checkBoardForPoints();
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[i].length; j++) {
       if (landed[i][j] !== 0) {
@@ -197,7 +196,6 @@ function tracking_placed_shapes(x, y, collision) {
         }
       }
     }
-    checkBoardForPoints();
   }
 }
 
@@ -250,7 +248,7 @@ function canRotate(rotatedShape) {
   return true;
 }
 
-function collisionCheck() {
+/* function collisionCheck() {
   for (let i = 0; i < shapes[shape_key].length; i++) {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] !== 0) {
@@ -260,10 +258,31 @@ function collisionCheck() {
     }
   }
   return false;
-}
+} */
+//Works
+function collisionCheck(xOffset = 0, yOffset = 0) {
+  for (let i = 0; i < shapes[shape_key].length; i++) {
+    for (let j = 0; j < shapes[shape_key][i].length; j++) {
+      if (shapes[shape_key][i][j] !== 0) {
+        const newX = x + j + xOffset;
+        const newY = y + i + yOffset;
 
+        // Check boundaries for left and right moves
+        if (newX < 0 || newX >= playing_board_columns) return true;
+
+        // Check bottom boundary only when moving down
+        if (yOffset > 0 && newY >= playing_board_rows) return true;
+
+        // Check collision with landed shapes
+        if (newY >= 0 && landed[newY][newX] !== 0) return true;
+      }
+    }
+  }
+  checkBoardForPoints();
+  return false;
+}
 function y_movement() {
-  if (!collisionCheck()) {
+  if (!collisionCheck(0, 1)) {
     if (!pause) {
       y++;
     }
@@ -279,7 +298,7 @@ function y_movement() {
 
 function update() {
   gameSpeedLimit++;
-  if (gameSpeedLimit === 200) {
+  if (gameSpeedLimit === 100) {
     gameSpeedLimit = 0;
     y_movement();
   }
@@ -287,7 +306,7 @@ function update() {
 
 function checkBoardForPoints() {
   for (let i = landed.length - 1; i >= 0; i--) {
-    if (landed[i].every((cell) => cell !== 0)) {
+    if (landed[i].every((cell) => typeof cell == typeof shapeColor)) {
       for (let row = i; row > 0; row--) {
         landed[row] = [...landed[row - 1]]; // Shift rows down
       }
@@ -299,7 +318,7 @@ function checkBoardForPoints() {
 function rotateShape(shape) {
   const rows = shape.length;
   const cols = shape[0].length;
-  let rotated = Array.from({ length: cols }, () => Array(rows).fill(0));
+  let rotated = Array.from({ length: cols }, () => Array(rows).fill(null));
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
@@ -318,19 +337,22 @@ window.addEventListener("keydown", (event) => {
     case "s":
     case "ArrowDown":
       console.log(landed);
-      y_movement();
+      /* y_movement(); */
+      if (!collisionCheck(0, 1)) y_movement(); // Check downward collision
       break;
     case "a":
     case "ArrowLeft":
-      if (x > 0 && !collisionCheck(x - 1, y)) x--;
+      /*   if (x > 0 && !collisionCheck(-1, y)) x--; */
+      if (!collisionCheck(-1, 0)) x--;
       break;
     case "d":
     case "ArrowRight":
-      if (
+      if (!collisionCheck(1, 0)) x++;
+      /* if (
         x < playing_board_columns - shapes[shape_key][0].length &&
-        !collisionCheck(x + 1, y)
+        !collisionCheck(1, y)
       )
-        x++;
+        x++; */
       break;
     case "w":
     case "ArrowUp":
