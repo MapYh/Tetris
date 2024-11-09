@@ -8,7 +8,7 @@ let lives = 4;
 let hit = false;
 let start = false;
 let pause = true;
-let colorForShapes = ["#00ff00", "#ffff00", "#ffaa00", "#aa00ff", "#00ffff"];
+let colorForShapes = ["#00e800", "#f0f002", "#f5a300", "#9e00ed", "#02e3e3"];
 let gameSpeedLimit = 10;
 let shapeColor =
   colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
@@ -71,7 +71,7 @@ let [
 
 function drawGrid() {
   // Set grid line color to white
-  ctx.strokeStyle = "#cfcaca";
+  ctx.strokeStyle = "#dbd7d7";
 
   // Loop through rows and columns to draw the grid lines
   for (let row = 0; row <= playing_board_rows; row++) {
@@ -147,6 +147,7 @@ function draw_Shape() {
     for (let j = 0; j < shapes[shape_key][i].length; j++) {
       if (shapes[shape_key][i][j] !== 0) {
         ctx.fillStyle = shapeColor; // Shape color
+
         ctx.fillRect(
           50 * j + x * 50,
           50 * i + y * 50,
@@ -160,13 +161,14 @@ function draw_Shape() {
       }
     }
   }
+
   return;
 }
 
 function draw() {
   canvas.width = square_size * playing_board_columns; // 350px.
   canvas.height = square_size * playing_board_rows; // 500px.
-
+  drawGrid();
   if (start) {
     undraw();
     draw_landed_shapes();
