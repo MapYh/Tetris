@@ -24,7 +24,13 @@ body {
 
 .score_lives__score {
   width: 10rem;
+  margin-left: 1rem;
 }
+.score_lives__lives {
+  width: 10rem;
+  margin-left: 1rem;
+}
+
 .buttons {
   display: flex;
   justify-content: center;

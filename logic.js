@@ -10,9 +10,7 @@ better background, (github page like light from below,)
 
 
 add highscore,
-add a pause screen, 
 make a gameover screen.
-and a reset.
 description with github pages link.
 save the block in the right color,
 make it so that the block can be moved when 
@@ -35,7 +33,7 @@ let pause = true;
 let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
 let gameSpeedLimit = 0;
 let shapeColor =
-  colorForShapes[Math.ceil(Math.random() * colorForShapes.length - 1)];
+  colorForShapes[Math.floor(Math.random() * colorForShapes.length - 1)];
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score} `);
@@ -87,12 +85,11 @@ function undraw() {
   return;
 }
 
-console.log(shapeColor);
 function draw_landed_shapes() {
   for (let i = 0; i < landed.length; i++) {
     for (let j = 0; j < landed[i].length; j++) {
       if (landed[i][j] !== 0) {
-        ctx.fillStyle = "green";
+        ctx.fillStyle = shapeColor;
         ctx.fillRect(50 * j, 50 * i, square_size, square_size);
         ctx.beginPath();
         ctx.rect(50 * j, 50 * i, square_size, square_size);
@@ -221,7 +218,7 @@ function randomShape() {
   randnum = Math.floor(Math.random() * keys.length);
   shape_key = keys[randnum];
   shapeColor =
-    colorForShapes[Math.floor(Math.random() * colorForShapes.length - 1)];
+    colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
   return randnum; // Return the random index
 }
 
@@ -235,6 +232,7 @@ function canRotate(rotatedShape) {
           x + j < 0 ||
           x + j >= playing_board_columns
         ) {
+          x--;
           return false;
         }
         // Check collision with landed shapes
