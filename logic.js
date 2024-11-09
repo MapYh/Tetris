@@ -1,20 +1,37 @@
 import { init_Board, shapes, landed, start_x, start_y } from "./init.js";
 
+////Things to addd
+/* 
+Better styling, 
+
+better background, (github page like light from below,)
+
+
+
+
+add highscore,
+add a pause screen, 
+make a gameover screen.
+and a reset.
+description with github pages link.
+save the block in the right color,
+make it so that the block can be moved when 
+they are att the bottom before the freeze into place, atm they stick to the bottom
+
+Look at other games and see what features they have.
+what other rendering ways are there for graphics?
+
+
+*/
+
 /********************Shapes    */
 const square_size = 50;
 let gameover = false;
 let score = 0;
 let lives = 3;
 let hit = false;
-let colorForShapes = [
-  "#4285F4",
-  "#FFEB3B",
-  "#34A853",
-  "#FB8C00 ",
-  "#EA4335",
-  /*  "blue",
-  "Brown", */
-];
+let start = false;
+let colorForShapes = ["#4285F4", "#FFEB3B", "#34A853", "#FB8C00", "#EA4335"];
 let gameSpeedLimit = 0;
 let shapeColor =
   colorForShapes[Math.ceil(Math.random() * colorForShapes.length - 1)];
@@ -30,6 +47,10 @@ livesElement.appendChild(livesNode);
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
 
+const startButton = document.querySelector(".start_button");
+startButton.addEventListener("click", () => {
+  start = true;
+});
 /*************Init playing board */
 let [
   playing_board,
@@ -89,9 +110,12 @@ function draw_Shape() {
 function draw() {
   canvas.width = square_size * playing_board_columns; // 350px.
   canvas.height = square_size * playing_board_rows; // 500px.
-  undraw();
-  draw_landed_shapes();
-  draw_Shape();
+  if (start) {
+    undraw();
+    draw_landed_shapes();
+    draw_Shape();
+  }
+
   return;
 }
 
@@ -283,7 +307,8 @@ window.addEventListener("keydown", (event) => {
       )
         x++;
       break;
-    case " ":
+    case "w":
+    case "":
       const rotatedShape = rotateShape(shapes[shape_key]);
       if (canRotate(rotatedShape)) shapes[shape_key] = rotatedShape;
       break;

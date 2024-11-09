@@ -1,12 +1,13 @@
 let playing_board = [];
 let landed = [];
 let init_flag = false;
-let playing_board_rows = 16;
-let playing_board_columns = 10;
+let playing_board_rows = 20;
+let playing_board_columns = 12;
 let start_x = 4;
 let start_y = 0;
 let x = Math.floor((playing_board_columns - 1) / 2); //Create a function that choses the best starting coordinates.
 let y = 0;
+let start = false;
 
 let shapes = {
   vertical_line: [[1], [1], [1]],
@@ -50,6 +51,14 @@ let shapes = {
     [1, 0],
     [1, 1],
     [0, 1],
+  ],
+  t: [
+    [0, 1, 0],
+    [1, 1, 1],
+  ],
+  upside_down_t: [
+    [1, 1, 1],
+    [0, 1, 0],
   ],
 };
 

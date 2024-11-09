@@ -14,7 +14,7 @@ body {
 
 .main {
   display: flex;
-  height: 50dvh;
+  height: 40dvh;
 }
 
 .playing_board__side_field__score_lives {
