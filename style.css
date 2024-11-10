@@ -5,7 +5,18 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(180deg, #0c0c0c, #3f3f3f);
+  /*  background: linear-gradient(180deg, #0c0c0c, #3f3f3f); */
+
+  background-image: radial-gradient(circle at center center, #3f3f3f, #e5e5f7),
+    repeating-radial-gradient(
+      circle at center center,
+      #3f3f3f,
+      #00e5ff,
+      100px,
+      transparent 20px,
+      transparent 10px
+    );
+  background-blend-mode: multiply;
 }
 
 #playing_board {
@@ -129,7 +140,7 @@ body {
 .counter_styling {
   font-family: "Roboto Mono", monospace;
   font-size: 20px;
-  color: #34a853; /* Vibrant Green */
+  color: #0fed4a; /* Vibrant Green */
 }
 
 .headings--font {
@@ -150,7 +161,7 @@ body {
   margin-left: 1rem;
   font-family: "Roboto Mono", monospace;
   font-size: 20px;
-  color: #34a853; /* Vibrant Green */
+  color: #0fed4a; /* Vibrant Green */
 }
 
 #gameOverScreen.hidden {
