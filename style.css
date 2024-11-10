@@ -59,7 +59,7 @@ body {
   border-radius: 0.25rem;
   cursor: pointer;
   font-family: "Press Start 2P", cursive;
-
+  /*   outline: 2px solid #ffeb3b; */
   color: rgb(255, 196, 0);
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin: 1rem;
@@ -69,6 +69,7 @@ body {
 .start_button_styling:hover {
   background-color: #e91e63; /* Bright Magenta on hover */
   transform: scale(1.05); /* Slightly enlarges on hover */
+  outline: 2px solid #ffeb3b;
 }
 
 /* Active effect */
@@ -98,6 +99,7 @@ body {
   cursor: pointer;
   font-family: "Press Start 2P", cursive;
   color: rgb(255, 196, 0);
+  /* outline: 2px solid #ffeb3b; */
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin: 1rem;
 }
@@ -106,6 +108,7 @@ body {
 .pause_button_styling:hover {
   background-color: #e91e63; /* Bright Magenta on hover */
   transform: scale(1.05); /* Slightly enlarges on hover */
+  outline: 2px solid #ffeb3b;
 }
 
 /* Active effect */
