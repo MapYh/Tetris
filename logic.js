@@ -5,6 +5,7 @@ const square_size = 50;
 let gameover = false;
 let score = 0;
 let lives = 4;
+let highScore = 0;
 let hit = false;
 let start = false;
 let pause = true;
@@ -12,7 +13,6 @@ let colorForShapes = ["#00e800", "#f0f002", "#f5a300", "#9e00ed", "#02e3e3"];
 let gameSpeedLimit = 10;
 let shapeColor =
   colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
-let highScore = 0;
 
 let scoreElement = document.getElementById("score");
 let scoreNode = document.createTextNode(`Score: ${score} `);
@@ -34,12 +34,11 @@ const restartButton = document.getElementById("restartButton");
 
 const canvas = document.getElementById("playing_board");
 const ctx = canvas.getContext("2d");
-document.getElementById("gameOverScreen").classList.add("hidden");
+
 const startButton = document.querySelector(".start_button");
 startButton.addEventListener("click", () => {
   if (pause) {
     pause = false;
-
     startButton.textContent = "Start";
   }
   start = true;
@@ -93,6 +92,8 @@ function drawGrid() {
 
 function showGameOverScreen() {
   finalScoreNode.nodeValue = `${highScore}`; // Display the final score
+  pause = true;
+
   gameOverScreen.classList.remove("hidden"); // Show the game over overlay
 }
 
@@ -103,8 +104,9 @@ function hideGameOverScreen() {
 function restartGame() {
   // Reset the game variables and restart the game
   score = 0;
-  lives = 3;
+  lives = 4;
   gameover = false;
+  pause = false;
   hideGameOverScreen(); // Hide game over screen
   reset(); // Reset the game board
   play(); // Start the game loop again
@@ -216,7 +218,14 @@ function updateLives() {
 }
 
 function updateScore() {
-  score += 10;
+  score += 800;
+  scoreNode.nodeValue = `Score: ${score}`;
+  checkHighScore(score);
+  return;
+}
+
+function updateScoreForNewPiece() {
+  score += 115;
   scoreNode.nodeValue = `Score: ${score}`;
   checkHighScore(score);
   return;
@@ -250,7 +259,7 @@ function randomShape() {
   shape_key = keys[randnum];
   shapeColor =
     colorForShapes[Math.floor(Math.random() * colorForShapes.length)];
-
+  updateScoreForNewPiece();
   return; // Return the random index
 }
 
@@ -377,7 +386,7 @@ window.addEventListener("keydown", (event) => {
   }
 
   draw();
-  /* event.preventDefault(); */
+  event.preventDefault();
 });
 
 /*********************** */

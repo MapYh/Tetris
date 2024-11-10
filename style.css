@@ -15,17 +15,19 @@ body {
 .main {
   display: flex;
   height: 35dvh;
+  max-width: 620px;
 }
 
 .playing_board__side_field__score_lives {
   display: flex;
-  width: 20rem;
+  width: 32rem;
 }
 
 .score_lives__score {
-  width: 10rem;
+  width: 10.5rem;
   margin-left: 1rem;
   margin-top: 1rem;
+  text-wrap: nowrap;
 }
 .score_lives__lives {
   width: 10rem;
@@ -37,27 +39,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 25rem;
 }
 .start_button {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50%;
+  width: 12.5rem;
+  max-width: 10.625rem;
 }
 
 .start_button_styling {
-  background-color: #00e5ff; /* Electric Cyan */
+  background-color: #03bdce; /* Electric Cyan */
   color: #2e2e2e; /* Dark Charcoal Gray for text */
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: bold;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
   font-family: "Press Start 2P", cursive;
-  font-size: 0.75rem;
-  color: #ffeb3b; /* Bright Yellow */
+
+  color: rgb(255, 196, 0);
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin: 1rem;
 }
@@ -82,21 +85,19 @@ body {
 .pause_button {
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 50%;
+  width: 12.5rem;
 }
 
 .pause_button_styling {
-  background-color: #00e5ff; /* Electric Cyan */
+  background-color: #03bdce; /* Electric Cyan */
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
   font-family: "Press Start 2P", cursive;
-  font-size: 0.75rem;
-  color: #ffeb3b; /* Bright Yellow */
+  color: rgb(255, 196, 0);
   transition: background-color 0.3s ease, transform 0.2s ease;
   margin: 1rem;
 }
@@ -240,4 +241,48 @@ body {
   font-size: 2rem;
 
   animation: gradientChange 5s ease-in-out infinite;
+}
+
+@media (max-width: 715px) {
+  .playing_board__side_field__score_lives {
+    flex-direction: column;
+  }
+  .score_lives__lives {
+    margin-left: 1rem;
+  }
+  .buttons {
+    flex-direction: column;
+    align-items: start;
+  }
+  .start_button {
+    width: auto;
+  }
+  .pause_button {
+    width: auto;
+  }
+}
+@media (max-width: 630px) {
+  .main {
+    width: 50vw;
+    flex-direction: column;
+  }
+  .highScore {
+    margin-left: 0;
+  }
+  .score_lives__score {
+    margin-left: 0;
+  }
+  .score_lives__lives {
+    margin-left: 0;
+  }
+  .buttons {
+    align-items: start;
+    margin-left: 3rem;
+  }
+  .start_button {
+    width: auto;
+  }
+  .pause_button {
+    width: auto;
+  }
 }
